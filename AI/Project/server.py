@@ -269,8 +269,10 @@ def valid_move(prev, cur, player):
 
 
 def check_winner(cur_state):
+    # If the black king is not on the boar, then the white player wins
     if cur_state.find('e') < 0:
         return 1
+    # Vice versa
     if cur_state.find('E') < 0:
         return 0
     return 2
@@ -475,16 +477,21 @@ while True:
 
     try:
         #print('>>[%d] move %d - %s should play. Sending state_%s_' % (idx_move, idx_move % 2, nicks[idx_move % 2], cur_state))
+
+        # If the idx_move is even, then the client[0] -> White is playing
         clients[idx_move % 2].send(cur_state.encode('ascii'))
-        prev_state = '%s' % cur_state
+        prev_state = '%s' % cur_state # The previous state is now the current on
         while True:
             clients[idx_move % 2].settimeout(time_out)
+            # The current state is changed after the client make a play
             cur_state = clients[idx_move % 2].recv(1024).decode('ascii')
             if len(cur_state) > 0:
                 break
         #print('Received state_%s_' % cur_state)
 
+        # Cheks if the move is valid, if not the game ends
         valid_mv = valid_move(prev_state, cur_state, idx_move % 2)
+
         #print('Valid %d' % valid_mv)
         if not valid_mv:
             file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
@@ -498,6 +505,8 @@ while True:
         file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
 
         #print('Evaluating finish')
+
+        # Finish is 2 if there is no winner yet, 0 if Player 0 wins and 1 if Player 1 wins
         finish = check_winner(cur_state)
         #print('Evaluated finish %d' % finish)
 

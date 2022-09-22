@@ -252,6 +252,7 @@ def sucessor_states(state, player):
     return ret
 
 def decide_move(state, play):
+    # It Randomly choose 1 (idx) all the possible successors (suc) of the play
     suc = sucessor_states(state, play)
     idx = random.randint(0, len(suc)-1)
     # print('State_%s_' % state)
