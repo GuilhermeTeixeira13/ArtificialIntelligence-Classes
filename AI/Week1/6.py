@@ -24,3 +24,6 @@ i = input("Number: ")
 print("The primordial of " + i + " is " + str(primordial(int(i))))
 
 
+
+
+
