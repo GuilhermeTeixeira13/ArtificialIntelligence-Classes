@@ -249,9 +249,33 @@ def sucessor_states(state, player):
 
     return ret
 
+# Usar uma pilha para o board.push() e board.pop()
+
+# Para o board.is_captured() podemos verificar a quantidade de peças comparativamente ao estado anterior.
+
+# Criar a função evaluateBoard() que vai:
+# 1 - Somar a quantidade de peças do tabuleiro (minhas e do adversário) tendo em conta:
+#   Bishop > 3 Pawns & Knight > 3 Pawns
+#   Bishop > Knight
+#   Bishop + Knight > Rook + Pawn
+# 2 - Avaliar a posição das minhas peças no tabuleiro tendo em conta que
+# posições favoráveis têm um valor mais alto (predefinido).
+# Se eu for o Branco (0) tem de retornar eval, se for o preto(1) retorna -eval
+
+# Criar a função quiesce(alpha, beta) que vai:
+# O objetivo desta pesquisa é avaliar apenas as posições “tranquilas”, ou seja,
+#   as posições onde não há jogadas táticas vencedoras a serem feitas.
+# Esta busca é necessária para evitar o efeito de horizonte que é causado
+#   pela limitação de profundidade do algoritmo de busca.
+
+
 def decide_move(state, play):
     suc = sucessor_states(state, play)
-    return None
+
+
+
+    idx = 0
+    return idx
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
