@@ -13,12 +13,17 @@ def is_prime(n):
 
 
 def primordial(n):
-    p = 1
-    for i in range(1, n + 1):
-        if is_prime(i):
-            p *= i
-    return p
-
+    cont = 0
+    start = 2
+    result = 1
+    while True:
+        if (cont == n):
+            break
+        if is_prime(start):
+            result *= start
+            cont += 1
+        start += 1
+    return result
 
 i = input("Number: ")
 print("The primordial of " + i + " is " + str(primordial(int(i))))
