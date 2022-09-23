@@ -1,6 +1,9 @@
 import socket, sys
+from collections import Counter
 
 interactive_flag = True
+
+board = ""
 
 def pos1_to_pos2(x):
     row = x // 8
@@ -249,7 +252,7 @@ def sucessor_states(state, player):
 
     return ret
 
-# Usar uma pilha para o board.push() e board.pop()
+# Usar uma pilha para o board.push() e board.pop() ou uma variável??
 
 # Para o board.is_captured() podemos verificar a quantidade de peças comparativamente ao estado anterior.
 
@@ -268,10 +271,80 @@ def sucessor_states(state, player):
 # Esta busca é necessária para evitar o efeito de horizonte que é causado
 #   pela limitação de profundidade do algoritmo de busca.
 
+# Criar a função alphabeta(alpha, beta, depthleft):
+# Agora, vamos explorar nosso algoritmo minimax. É uma regra de decisão usada em
+# inteligência artificial, teoria da decisão, teoria dos jogos, estatística e filosofia
+# para minimizar a possível perda no pior cenário. Em palavras simples, a cada passo,
+# ele assume que o jogador A está tentando maximizar suas chances de ganhar e,
+# no próximo turno, o jogador B está tentando minimizar as chances de ganhar.
+
+# Selecionar o melhor movimento:
+#         bestMove = chess.Move.null()
+#         bestValue = -99999
+#         alpha = -100000
+#         beta = 100000
+#         for move in board.legal_moves:
+#             board.push(move)
+#             boardValue = -alphabeta(-beta, -alpha, depth - 1)
+#             if boardValue > bestValue:
+#                 bestValue = boardValue
+#                 bestMove = move
+#             if (boardValue > alpha):
+#                 alpha = boardValue
+#             board.pop()
+#         return
+
+def check_winner(cur_state):
+    # If the black king is not on the boar, then the white player wins
+    if cur_state.find('e') < 0:
+        return 1
+    # Vice versa
+    if cur_state.find('E') < 0:
+        return 0
+    return 2
+
+def is_checkmate(board, play):
+    suc = sucessor_states(board, play)
+    for move in suc:
+        # Se uma das próximas jogadas der a vitória ao meu oponent, ent estou sob checkmate atualmente
+        if check_winner(move) == (1 - play):
+            return True
+    return False
+
+# Criar função que dada uma string com determinadas peças "CF" insere dentro de uma lista todas as posições dessas peças no tabuleiro. [1, 25]
+# Usar matrizes(listas) do novo link, e para contar das peças pretas reverter a lista e negar
+
+def evaluate_board():
+    global board, player
+
+    if is_checkmate(board, player):
+        return -9999
+    elif is_checkmate(board, 1 - player):
+        return 9999
+
+    counter = Counter(board)
+    wp = counter["I"] + counter["J"] + counter["K"] + counter["L"] + counter["M"] + counter["N"] + counter["O"] + \
+         counter["P"]
+    bp = counter["i"] + counter["j"] + counter["k"] + counter["l"] + counter["m"] + counter["n"] + counter["o"] + \
+         counter["p"]
+    wk = counter["B"] + counter["G"]
+    bk = counter["b"] + counter["g"]
+    wb = counter["C"] + counter["F"]
+    bb = counter["c"] + counter["f"]
+    wr = counter["A"] + counter["H"]
+    br = counter["a"] + counter["h"]
+    wq = counter["D"]
+    bq = counter["d"]
+
+    material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+
+
+
 
 def decide_move(state, play):
+    global board
+    board = state
     suc = sucessor_states(state, play)
-
 
 
     idx = 0
