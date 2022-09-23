@@ -2,7 +2,7 @@ import socket, sys
 from collections import Counter
 import re
 
-interactive_flag = True
+interactive_flag = False
 
 board = ""
 
@@ -313,6 +313,10 @@ def sucessor_states(state, player):
 #             board.pop()
 #         return
 
+def Reverse(lst):
+    new_lst = lst[::-1]
+    return new_lst
+
 pawntablewhite = [
     0, 0, 0, 0, 0, 0, 0, 0,
     50, 50, 50, 50, 50, 50, 50, 50,
@@ -322,6 +326,8 @@ pawntablewhite = [
     5, -5, -10, 0, 0, -10, -5, 5,
     5, 10, 10, -25, -25, 10, 10, 5,
     0, 0, 0, 0, 0, 0, 0, 0]
+
+pawntableblack = Reverse(pawntablewhite)
 
 knighttablewhite = [
     -50, -40, -30, -30, -30, -30, -40, -50,
@@ -333,6 +339,8 @@ knighttablewhite = [
     -40, -20, 0, 5, 5, 0, -20, -40,
     -50, -40, -20, -30, -30, -20, -40, -50]
 
+knighttableblack = Reverse(knighttablewhite)
+
 bishopstablewhite = [
     -20, -10, -10, -10, -10, -10, -10, -20,
     -10, 0, 0, 0, 0, 0, 0, -10,
@@ -342,6 +350,8 @@ bishopstablewhite = [
     -10, 10, 10, 10, 10, 10, 10, -10,
     -10, 5, 0, 0, 0, 0, 5, -10,
     -20, -10, -40, -10, -10, -40, -10, -20]
+
+bishopstableblack = Reverse(bishopstablewhite)
 
 rookstablewhite = [
     -20, -10, -10, -10, -10, -10, -10, -20,
@@ -353,6 +363,8 @@ rookstablewhite = [
     -10, 5, 0, 0, 0, 0, 5, -10,
     -20, -10, -10, -10, -10, -10, -10, -20]
 
+rookstableblack = Reverse(rookstablewhite)
+
 queentablewhite = [
     -20, -10, -10, -5, -5, -10, -10, -20,
     -10, 0, 0, 0, 0, 0, 0, -10,
@@ -362,6 +374,8 @@ queentablewhite = [
     -10, 5, 5, 5, 5, 5, 0, -10,
     -10, 0, 5, 0, 0, 0, 0, -10,
     -20, -10, -10, -5, -5, -10, -10, -20]
+
+queentableblack = Reverse(queentablewhite)
 
 kingtablewhite = [
     -30, -40, -40, -50, -50, -40, -40, -30,
@@ -373,6 +387,7 @@ kingtablewhite = [
     20, 20, 0, 0, 0, 0, 20, 20,
     20, 30, 10, 0, 0, 10, 30, 20]
 
+kingtableblack = Reverse(kingtablewhite)
 
 
 def check_winner(cur_state):
@@ -402,9 +417,6 @@ def positions_of_pieces(pieces, board):
             result.append(pos.start())
     return result.sort()
 
-
-# Usar matrizes(listas) do novo link, e para contar das peças pretas reverter a lista e negar
-
 def evaluate_board():
     global board, player
 
@@ -429,14 +441,104 @@ def evaluate_board():
 
     material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
 
+    pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
+    pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("ijklmnop", board)])
+
+    knightsq = sum([knighttablewhite[pos] for pos in positions_of_pieces("BG", board)])
+    knightsq = knightsq + sum([-knighttableblack[pos] for pos in positions_of_pieces("bg", board)])
+
+    bishopsq = sum([bishopstablewhite[pos] for pos in positions_of_pieces("CF", board)])
+    bishopsq = bishopsq + sum([-bishopstableblack[pos] for pos in positions_of_pieces("cf", board)])
+
+    rooksq = sum([rookstablewhite[pos] for pos in positions_of_pieces("AH", board)])
+    rooksq = rooksq + sum([-rookstableblack[pos] for pos in positions_of_pieces("aH", board)])
+
+    queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("D", board)])
+    queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("d", board)])
+
+    kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("E", board)])
+    kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("e", board)])
+
+    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+
+    if player == 0:
+        return eval
+    else:
+        return -eval
+
+def is_capture(board, move, play):
+    if play == 0:
+        oppontent_pieces_before = positions_of_pieces("abcdefghijklmnop", board)
+        oppontent_pieces_after = positions_of_pieces("abcdefghijklmnop", move)
+    else:
+        oppontent_pieces_before = positions_of_pieces("IJKLMNOPABCDEFGH", board)
+        oppontent_pieces_after = positions_of_pieces("IJKLMNOPABCDEFGH", move)
+
+    if oppontent_pieces_after < oppontent_pieces_before:
+        return True
+    else:
+        return False
+
+def quiesce(alpha, beta):
+    global board, player
+
+    stand_pat = evaluate_board()
+    if stand_pat >= beta:
+        return beta
+    if alpha < stand_pat:
+        alpha = stand_pat
+
+    for move in sucessor_states(board, player):
+        if is_capture(board, move, player):
+            board = move
+            score = -quiesce(-beta, -alpha)
+            board = ""
+
+            if score >= beta:
+                return beta
+            if score > alpha:
+                alpha = score
+    return alpha
+
+def alphabeta(alpha, beta, depthleft):
+    global board, player
+
+    bestscore = -9999
+    if (depthleft == 0):
+        return quiesce(alpha, beta)
+    for move in sucessor_states(board, player):
+        board = move
+        score = -alphabeta(-beta, -alpha, depthleft - 1)
+        board = ""
+        if (score >= beta):
+            return score
+        if (score > bestscore):
+            bestscore = score
+        if (score > alpha):
+            alpha = score
+    return bestscore
+
+def selectmove(depth):
+    global board, player
+
+    bestMove = ""
+    bestValue = -99999
+    alpha = -100000
+    beta = 100000
+    for move in sucessor_states(board, player):
+        board = move
+        boardValue = -alphabeta(-beta, -alpha, depth - 1)
+        if boardValue > bestValue:
+            bestValue = boardValue
+            bestMove = move
+        if (boardValue > alpha):
+            alpha = boardValue
+        board = ""
+    return bestMove
 
 def decide_move(state, play):
-    global board
-    board = state
-    suc = sucessor_states(state, play)
-
-    idx = 0
-    return idx
+    move = selectmove(3)
+    return move
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
