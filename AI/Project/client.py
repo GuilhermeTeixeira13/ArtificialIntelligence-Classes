@@ -1,22 +1,26 @@
 import socket, sys
 from collections import Counter
+import re
 
 interactive_flag = True
 
 board = ""
+
 
 def pos1_to_pos2(x):
     row = x // 8
     col = x % 8
     return [row, col]
 
+
 def pos2_to_pos1(x2):
     return x2[0] * 8 + x2[1]
+
 
 def get_positions_directions(state, piece, p2, directions):
     ret = []
     for d in directions:
-        for r in range(1, d[1]+1):
+        for r in range(1, d[1] + 1):
             if d[0] == 'N':
                 if p2[0] - r < 0:
                     break
@@ -133,60 +137,73 @@ def get_positions_directions(state, piece, p2, directions):
                 continue
             if d[0] == 'H':
                 if p2[0] - 2 >= 0 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] - 1])
 
                 if p2[0] - 2 >= 0 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] + 1])
 
                 if p2[0] - 1 >= 0 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] + 2])
 
                 if p2[0] + 1 <= 7 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] + 2])
 
                 if p2[0] + 2 <= 7 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] + 1])
 
                 if p2[0] + 2 <= 7 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] - 1])
 
                 if p2[0] + 1 <= 7 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] - 2])
 
                 if p2[0] - 1 >= 0 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] - 2])
     return ret
 
+
 def get_available_positions(state, p2, piece):
     ret = []
-    if piece in ('a', 'h', 'A', 'H'):   #Tower
+    if piece in ('a', 'h', 'A', 'H'):  # Tower
         aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('c', 'f', 'C', 'F'):   #Bishop
+    if piece in ('c', 'f', 'C', 'F'):  # Bishop
         aux = get_positions_directions(state, piece, p2, [['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('d', 'D'):   #Queen
-        aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
+    if piece in ('d', 'D'):  # Queen
+        aux = get_positions_directions(state, piece, p2,
+                                       [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7],
+                                        ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('e', 'E'):   #King
-        aux = get_positions_directions(state, piece, p2, [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1], ['SW', 1]])
+    if piece in ('e', 'E'):  # King
+        aux = get_positions_directions(state, piece, p2,
+                                       [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1],
+                                        ['SW', 1]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
@@ -226,10 +243,11 @@ def get_available_positions(state, p2, piece):
             ret.extend(aux)
     return ret
 
+
 def sucessor_states(state, player):
     ret = []
 
-    for x in range(ord('a')-player*32, ord('p')-player*32+1):
+    for x in range(ord('a') - player * 32, ord('p') - player * 32 + 1):
 
         p = state.find(chr(x))
         if p < 0:
@@ -251,6 +269,7 @@ def sucessor_states(state, player):
             ret.append(''.join(state_aux))
 
     return ret
+
 
 # Usar uma pilha para o board.push() e board.pop() ou uma variável??
 
@@ -294,6 +313,68 @@ def sucessor_states(state, player):
 #             board.pop()
 #         return
 
+pawntablewhite = [
+    0, 0, 0, 0, 0, 0, 0, 0,
+    50, 50, 50, 50, 50, 50, 50, 50,
+    10, 10, 20, 30, 30, 20, 10, 10,
+    5, 5, 10, 27, 27, 10, 5, 5,
+    0, 0, 0, 25, 25, 0, 0, 0,
+    5, -5, -10, 0, 0, -10, -5, 5,
+    5, 10, 10, -25, -25, 10, 10, 5,
+    0, 0, 0, 0, 0, 0, 0, 0]
+
+knighttablewhite = [
+    -50, -40, -30, -30, -30, -30, -40, -50,
+    -40, -20, 0, 0, 0, 0, -20, -40,
+    -30, 0, 10, 15, 15, 10, 0, -30,
+    -30, 5, 15, 20, 20, 15, 5, -30,
+    -30, 0, 15, 20, 20, 15, 0, -30,
+    -30, 5, 10, 15, 15, 10, 5, -30,
+    -40, -20, 0, 5, 5, 0, -20, -40,
+    -50, -40, -20, -30, -30, -20, -40, -50]
+
+bishopstablewhite = [
+    -20, -10, -10, -10, -10, -10, -10, -20,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -10, 0, 5, 10, 10, 5, 0, -10,
+    -10, 5, 5, 10, 10, 5, 5, -10,
+    -10, 0, 10, 10, 10, 10, 0, -10,
+    -10, 10, 10, 10, 10, 10, 10, -10,
+    -10, 5, 0, 0, 0, 0, 5, -10,
+    -20, -10, -40, -10, -10, -40, -10, -20]
+
+rookstablewhite = [
+    -20, -10, -10, -10, -10, -10, -10, -20,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -10, 0, 5, 10, 10, 5, 0, -10,
+    -10, 5, 5, 10, 10, 5, 5, -10,
+    -10, 0, 10, 10, 10, 10, 0, -10,
+    -10, 10, 10, 10, 10, 10, 10, -10,
+    -10, 5, 0, 0, 0, 0, 5, -10,
+    -20, -10, -10, -10, -10, -10, -10, -20]
+
+queentablewhite = [
+    -20, -10, -10, -5, -5, -10, -10, -20,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -10, 0, 5, 5, 5, 5, 0, -10,
+    -5, 0, 5, 5, 5, 5, 0, -5,
+    0, 0, 5, 5, 5, 5, 0, -5,
+    -10, 5, 5, 5, 5, 5, 0, -10,
+    -10, 0, 5, 0, 0, 0, 0, -10,
+    -20, -10, -10, -5, -5, -10, -10, -20]
+
+kingtablewhite = [
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -20, -30, -30, -40, -40, -30, -30, -20,
+    -10, -20, -20, -20, -20, -20, -20, -10,
+    20, 20, 0, 0, 0, 0, 20, 20,
+    20, 30, 10, 0, 0, 10, 30, 20]
+
+
+
 def check_winner(cur_state):
     # If the black king is not on the boar, then the white player wins
     if cur_state.find('e') < 0:
@@ -302,6 +383,7 @@ def check_winner(cur_state):
     if cur_state.find('E') < 0:
         return 0
     return 2
+
 
 def is_checkmate(board, play):
     suc = sucessor_states(board, play)
@@ -312,6 +394,15 @@ def is_checkmate(board, play):
     return False
 
 # Criar função que dada uma string com determinadas peças "CF" insere dentro de uma lista todas as posições dessas peças no tabuleiro. [1, 25]
+def positions_of_pieces(pieces, board):
+    result = []
+    list = pieces.list()
+    for piece in list:
+        for pos in re.finditer(piece, board):
+            result.append(pos.start())
+    return result.sort()
+
+
 # Usar matrizes(listas) do novo link, e para contar das peças pretas reverter a lista e negar
 
 def evaluate_board():
@@ -339,26 +430,23 @@ def evaluate_board():
     material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
 
 
-
-
 def decide_move(state, play):
     global board
     board = state
     suc = sucessor_states(state, play)
 
-
     idx = 0
     return idx
 
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))                             #connecting client to server
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
+client.connect((sys.argv[1], int(sys.argv[2])))  # connecting client to server
 
 client.send(sys.argv[3].encode('ascii'))
 
 player = int(sys.argv[4])
 
-while True:                                                 #making valid connection
+while True:  # making valid connection
     while True:
         message = client.recv(1024).decode('ascii')
         if len(message) > 0:
@@ -375,11 +463,11 @@ while True:                                                 #making valid connec
         p_to = pos2_to_pos1([row_to, col_to])
 
         if (0 <= p_from <= 63) and (0 <= p_to <= 63):
-            message = list(message) # ["a", "b", ... , "G", "H"]
+            message = list(message)  # ["a", "b", ... , "G", "H"]
             aux = message[p_from]
-            message[p_from] = 'z' # The postion from where the move came from, is now empty
-            message[p_to] = aux # The moved piece (aux) is now in the "p_to" position
-            message = ''.join(message) # "ab...gh"
+            message[p_from] = 'z'  # The postion from where the move came from, is now empty
+            message[p_to] = aux  # The moved piece (aux) is now in the "p_to" position
+            message = ''.join(message)  # "ab...gh"
     else:
         message = decide_move(message, player)
 
