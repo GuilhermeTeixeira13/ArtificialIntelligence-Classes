@@ -1,22 +1,22 @@
 import socket, sys
-from collections import Counter
-import re
+from collections import Counter # Added by me
+import re # Added by me
 
 interactive_flag = False
+board = "" # Added by me
 
-board = ""
+def pos2_to_pos1(x2):
+    return x2[0] * 8 + x2[1]
 
 
+# Added by me (copy from RandomPlays.py)
 def pos1_to_pos2(x):
     row = x // 8
     col = x % 8
     return [row, col]
 
 
-def pos2_to_pos1(x2):
-    return x2[0] * 8 + x2[1]
-
-
+# Added by me (copy from RandomPlays.py)
 def get_positions_directions(state, piece, p2, directions):
     ret = []
     for d in directions:
@@ -178,6 +178,7 @@ def get_positions_directions(state, piece, p2, directions):
     return ret
 
 
+# Added by me (copy from RandomPlays.py)
 def get_available_positions(state, p2, piece):
     ret = []
     if piece in ('a', 'h', 'A', 'H'):  # Tower
@@ -244,6 +245,7 @@ def get_available_positions(state, p2, piece):
     return ret
 
 
+# Added by me (copy from RandomPlays.py)
 def sucessor_states(state, player):
     ret = []
 
@@ -296,22 +298,6 @@ def sucessor_states(state, player):
 # para minimizar a possível perda no pior cenário. Em palavras simples, a cada passo,
 # ele assume que o jogador A está tentando maximizar suas chances de ganhar e,
 # no próximo turno, o jogador B está tentando minimizar as chances de ganhar.
-
-# Selecionar o melhor movimento:
-#         bestMove = chess.Move.null()
-#         bestValue = -99999
-#         alpha = -100000
-#         beta = 100000
-#         for move in board.legal_moves:
-#             board.push(move)
-#             boardValue = -alphabeta(-beta, -alpha, depth - 1)
-#             if boardValue > bestValue:
-#                 bestValue = boardValue
-#                 bestMove = move
-#             if (boardValue > alpha):
-#                 alpha = boardValue
-#             board.pop()
-#         return
 
 def Reverse(lst):
     new_lst = lst[::-1]
@@ -541,6 +527,7 @@ def selectmove(depth):
         board = ""
     return bestMove
 
+
 def decide_move(state, play):
     global board
     board = state
@@ -548,14 +535,14 @@ def decide_move(state, play):
     return move
 
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))  # connecting client to server
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
+client.connect((sys.argv[1], int(sys.argv[2])))                             #connecting client to server
 
 client.send(sys.argv[3].encode('ascii'))
 
 player = int(sys.argv[4])
 
-while True:  # making valid connection
+while True:                                                 #making valid connection
     while True:
         message = client.recv(1024).decode('ascii')
         if len(message) > 0:
@@ -567,16 +554,15 @@ while True:  # making valid connection
         row_to = int(input('Row to > '))
         col_to = int(input('Col to > '))
 
-        # Example: Pos[1,1] is going to B the pos (1*8)+1=9 -> The 9th square in the chess board
         p_from = pos2_to_pos1([row_from, col_from])
         p_to = pos2_to_pos1([row_to, col_to])
 
         if (0 <= p_from <= 63) and (0 <= p_to <= 63):
-            message = list(message)  # ["a", "b", ... , "G", "H"]
+            message = list(message)
             aux = message[p_from]
-            message[p_from] = 'z'  # The postion from where the move came from, is now empty
-            message[p_to] = aux  # The moved piece (aux) is now in the "p_to" position
-            message = ''.join(message)  # "ab...gh"
+            message[p_from] = 'z'
+            message[p_to] = aux
+            message = ''.join(message)
     else:
         message = decide_move(message, player)
 

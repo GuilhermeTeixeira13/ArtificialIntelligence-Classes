@@ -3,7 +3,10 @@ import os, sys
 import time
 from datetime import datetime
 
-time_out = 1500.0
+time_out = 1000000
+
+moves_without_eat_to_draw = 10
+
 
 def pos1_to_pos2(x):
     row = x // 8
@@ -15,11 +18,10 @@ def pos2_to_pos1(x2):
     return x2[0] * 8 + x2[1]
 
 
-
 def get_positions_directions(state, piece, p2, directions):
     ret = []
     for d in directions:
-        for r in range(1, d[1]+1):
+        for r in range(1, d[1] + 1):
             if d[0] == 'N':
                 if p2[0] - r < 0:
                     break
@@ -137,61 +139,73 @@ def get_positions_directions(state, piece, p2, directions):
                 continue
             if d[0] == 'H':
                 if p2[0] - 2 >= 0 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] - 1])
 
                 if p2[0] - 2 >= 0 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] + 1])
 
                 if p2[0] - 1 >= 0 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] + 2])
 
                 if p2[0] + 1 <= 7 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] + 2])
 
                 if p2[0] + 2 <= 7 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] + 1])
 
                 if p2[0] + 2 <= 7 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] - 1])
 
                 if p2[0] + 1 <= 7 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] - 2])
 
                 if p2[0] - 1 >= 0 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(
+                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] - 2])
     return ret
 
 
 def get_available_positions(state, p2, piece):
     ret = []
-    if piece in ('a', 'h', 'A', 'H'):   #Tower
+    if piece in ('a', 'h', 'A', 'H'):  # Tower
         aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('c', 'f', 'C', 'F'):   #Bishop
+    if piece in ('c', 'f', 'C', 'F'):  # Bishop
         aux = get_positions_directions(state, piece, p2, [['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('d', 'D'):   #Queen
-        aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
+    if piece in ('d', 'D'):  # Queen
+        aux = get_positions_directions(state, piece, p2,
+                                       [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7],
+                                        ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('e', 'E'):   #King
-        aux = get_positions_directions(state, piece, p2, [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1], ['SW', 1]])
+    if piece in ('e', 'E'):  # King
+        aux = get_positions_directions(state, piece, p2,
+                                       [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1],
+                                        ['SW', 1]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
@@ -235,7 +249,7 @@ def get_available_positions(state, p2, piece):
 def sucessor_states(state, player):
     ret = []
 
-    for x in range(ord('a')-player*32, ord('p')-player*32+1):
+    for x in range(ord('a') - player * 32, ord('p') - player * 32 + 1):
 
         p = state.find(chr(x))
         if p < 0:
@@ -269,13 +283,18 @@ def valid_move(prev, cur, player):
 
 
 def check_winner(cur_state):
-    # If the black king is not on the boar, then the white player wins
     if cur_state.find('e') < 0:
         return 1
-    # Vice versa
     if cur_state.find('E') < 0:
         return 0
     return 2
+
+
+def pieces_eaten(prev_state, cur_state):
+    for c in prev_state:
+        if cur_state.find(c) < 0:
+            return True
+    return False
 
 
 # #####################################################################################################################
@@ -400,6 +419,7 @@ def print_board(prev, cur, idx, nick):
 
     return ret
 
+
 def get_description_piece(piece):
     if ord(piece) < 97:
         ret = 'Black '
@@ -419,24 +439,25 @@ def get_description_piece(piece):
         ret = ret + 'Pawn'
     return ret
 
+
 def description_move(prev, cur, idx, nick):
-    #print('description_move()')
+    # print('description_move()')
     ret = 'Move [%d - %s]: ' % (idx, nick)
 
     cur_blank = [i for i, ltr in enumerate(cur) if ltr == 'z']
     prev_not_blank = [i for i, ltr in enumerate(prev) if ltr != 'z']
-    #print(cur_blank)
-    #print(prev_not_blank)
+    # print(cur_blank)
+    # print(prev_not_blank)
     moved = list(set(cur_blank) & set(prev_not_blank))
-    #print(moved)
+    # print(moved)
     moved = moved[0]
 
     desc_piece = get_description_piece(prev[moved])
 
     fr = pos1_to_pos2(moved)
     to = pos1_to_pos2(cur.find(prev[moved]))
-    #print(fr)
-    #print(to)
+    # print(fr)
+    # print(to)
 
     ret = ret + desc_piece + ' (%d, %d) --> (%d, %d)' % (fr[0], fr[1], to[0], to[1])
     if prev[pos2_to_pos1(to)] != 'z':
@@ -444,15 +465,16 @@ def description_move(prev, cur, idx, nick):
         ret = ret + ' eaten ' + desc_piece
     return ret
 
+
 # #####################################################################################################################
 
 
-host = sys.argv[1]                                                    #LocalHost
-port = int(sys.argv[2])                                                             #Choosing unreserved port
+host = sys.argv[1]  # LocalHost
+port = int(sys.argv[2])  # Choosing unreserved port
 colors = ['White', 'Black']
 
-server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)              #socket initialization
-server.bind((host, port))                                               #binding host and port to socket
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
+server.bind((host, port))  # binding host and port to socket
 server.listen()
 
 client_0, address_0 = server.accept()
@@ -464,69 +486,78 @@ nick_1 = client_1.recv(1024).decode('ascii')
 nicks = [nick_0, nick_1]
 clients = [client_0, client_1]
 
-print(clients)
-print(nicks)
-
 cur_state = 'abcdefghijklmnopzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzIJKMNLOPABCDEFGH'
 
-date_time_file = os.path.join('%s' % nick_0 + '_' + '%s' % nick_1 + '_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '_log.txt')
+date_time_file = os.path.join(
+    '%s' % nick_0 + '_' + '%s' % nick_1 + '_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '_log.txt')
 
 file_out = open(date_time_file, "a+")
 
 print('%s' % print_board(None, cur_state, 0, None))
 
 idx_move = 0
+moves_without_eat = 0
 while True:
 
     try:
-        #print('>>[%d] move %d - %s should play. Sending state_%s_' % (idx_move, idx_move % 2, nicks[idx_move % 2], cur_state))
-
-        # If the idx_move is even, then the client[0] -> White is playing
+        # print('>>[%d] move %d - %s should play. Sending state_%s_' % (idx_move, idx_move % 2, nicks[idx_move % 2], cur_state))
         clients[idx_move % 2].send(cur_state.encode('ascii'))
-        prev_state = '%s' % cur_state # The previous state is now the current on
+        prev_state = '%s' % cur_state
         while True:
             clients[idx_move % 2].settimeout(time_out)
-            # The current state is changed after the client make a play
             cur_state = clients[idx_move % 2].recv(1024).decode('ascii')
             if len(cur_state) > 0:
                 break
-        #print('Received state_%s_' % cur_state)
+        # print('Received state_%s_' % cur_state)
 
-        # Cheks if the move is valid, if not the game ends
         valid_mv = valid_move(prev_state, cur_state, idx_move % 2)
-
-        #print('Valid %d' % valid_mv)
+        # print('Valid %d' % valid_mv)
         if not valid_mv:
             file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
             print('%s' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
-            print('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
-            file_out.write('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
+            print('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (
+            idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
+            file_out.write('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (
+            idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
             break
-        #print('printing board...')
-        print('%s' % print_board(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
+        # print('printing board...')
+        board = print_board(prev_state, cur_state, idx_move, nicks[idx_move % 2])
+        print('%s' % board)
 
+        # Antes -> file_out.write('%s\n' % print_board(prev_state, cur_state, idx_move, nicks[idx_move % 2]) -> Explodia aqui e entrava no Except
         file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
 
-        #print('Evaluating finish')
-
-        # Finish is 2 if there is no winner yet, 0 if Player 0 wins and 1 if Player 1 wins
+        # print('Evaluating finish')
         finish = check_winner(cur_state)
-        #print('Evaluated finish %d' % finish)
+        # print('Evaluated finish %d' % finish)
 
         if finish < 2:
-
             print('Player %d - %s: %s wins. Game finished. ' % (finish, nicks[finish], colors[finish]))
             file_out.write('Player %d - %s: %s wins. Game finished. ' % (finish, nicks[finish], colors[finish]))
             break
 
+        eat = pieces_eaten(prev_state, cur_state)
+        if not eat:
+            moves_without_eat += 1
+        else:
+            moves_without_eat = 0
+        if moves_without_eat >= moves_without_eat_to_draw:
+            print('%d consecutives without eaten pieces. %s - %s Draw. Game finished. ' % (
+            moves_without_eat, nicks[0], nicks[1]))
+            file_out.write('%d consecutives without eaten pieces. %s - %s Draw. Game finished. ' % (
+            moves_without_eat, nicks[0], nicks[1]))
+            break
+
         idx_move += 1
         time.sleep(0.1)
-        #print('Done...')
+        # print('Done...')
     except:
-        print('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)], colors[1 - (idx_move % 2)]))
-        file_out.write('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)], colors[1 - (idx_move % 2)]))
+        print('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (
+        idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)],
+        colors[1 - (idx_move % 2)]))
+        file_out.write('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (
+        idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)],
+        colors[1 - (idx_move % 2)]))
         break
-
-
 
 file_out.close()
