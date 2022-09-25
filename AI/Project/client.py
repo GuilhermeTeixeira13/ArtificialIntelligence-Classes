@@ -393,10 +393,10 @@ kingtableblack = Reverse(kingtablewhite)
 def check_win(cur_state):
     # If the black king is not on the boar, then the white player wins
     if cur_state.find('e') < 0:
-        return 0
+        return 1
     # Vice versa
     if cur_state.find('E') < 0:
-        return 1
+        return 0
     return 2
 
 
@@ -424,7 +424,6 @@ def evaluate_board():
     if is_checkmate(board, player):
         return -9999
     elif is_checkmate(board, 1 - player):
-        print("dá para terminar!!")
         return 9999
 
     counter = Counter(board)
@@ -442,9 +441,6 @@ def evaluate_board():
     bq = counter["d"]
 
     material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
-
-    print(board)
-    print(positions_of_pieces("IJKLMNOP", board))
 
     pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
     pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("ijklmnop", board)])
@@ -544,7 +540,21 @@ def selectmove(depth):
 def decide_move(state, play):
     global board
     board = state
-    move = selectmove(3)
+    win = False
+
+    moves = sucessor_states(board, play)
+    for m in moves:
+        print(str(check_win(m)) + " == "+ str(play))
+        if check_win(m) == play:
+            print("Encontrou!!")
+            win = True
+            move = m
+            break
+
+    print(win)
+    if win == False:
+        move = selectmove(3)
+
     return move
 
 
