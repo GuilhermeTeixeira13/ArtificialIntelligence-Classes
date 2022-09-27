@@ -544,7 +544,7 @@ def decide_move(state, play):
 
     #print(win)
     if win == False:
-        move = selectmove(3)
+        move = selectmove(1)
 
     return move
 
