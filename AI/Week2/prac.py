@@ -87,7 +87,25 @@ def sucessors(state, height, width):
 
     return suc
 
+def win(board):
+    for num in range(1, 16):
+        if board[num-1] != num:
+            return False
+    if board[15] != 0:
+        return False
+    return True
 
+def build_tree(tree, board, height, width):
+    suc = sucessors(board, height, width)
+
+    if tree == []:
+        tree = [board, [suc]]
+
+    for s in suc:
+        if(win(s) == False):
+            build_tree(trees.insert_node_tree(tree, [s, [[sucessors(s, height, width)]]], board), s, height, width)
+
+    return tree
 
 # [Estado, [E1, E2, E3]]
 
@@ -106,5 +124,7 @@ suc = sucessors(l, height, width)
 for board in suc:
     show_state(board, height, width)
 
-tree = [l, sucessors(l, height, width)]
-print(tree)
+print("win = "+str(win(l)))
+
+tree = build_tree([], l, height, width)
+#print(tree)

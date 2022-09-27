@@ -22,13 +22,12 @@ def insert_node_tree(tr, nv, parent):
         nd[1] = [nv]
         return tr
     for pos, el in enumerate(nd[1]):
-        if el[0] > nv[0]:
-            nd[1].insert(nv)
+        #if el[0] > nv[0]:
+            nd[1].append(nv)
             return tr
 
-    nd[1].insert(nv, -1)
+    nd[1].append(nv, -1)
     return tr
-
 
 
 
