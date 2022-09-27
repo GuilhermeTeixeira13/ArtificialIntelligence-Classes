@@ -1,5 +1,8 @@
 import random
+import math
+import trees
 from tabulate import tabulate
+
 
 def create_randomstate(height, width):
     state = list(range(0, height * width))
@@ -12,14 +15,15 @@ def show_state(state, height, width):
     table_line = []
     for pos in range(height * width):
         table_line.append(state[pos])
-        if((pos+1) % height == 0):
+        if ((pos + 1) % height == 0):
             table.append(table_line)
             table_line = []
 
     print(tabulate(table))
 
+
 def valid_state(state, height, width):
-    if(len(state) != height * width):
+    if (len(state) != height * width):
         return False
 
     for i in range(height * width):
@@ -28,9 +32,16 @@ def valid_state(state, height, width):
 
     return True
 
+def pos2D_to_pos1D(p, height, width):
+    return (p[0] * width + p[1])
+
+
+def pos1D_to_pos2D(p, height, width):
+    return ([p // width, p % height ])
+
 
 def sucessors(state, height, width):
-    # encontrar o zero, transformar em pos 2D
+    # Encontrar o zero, transformar em pos 2D
     # ou esta no canto e tem 2 suc
     # ou esta nas bordas e tem 3
     # ou está no resto e tem 4
@@ -38,44 +49,43 @@ def sucessors(state, height, width):
     if 0 in state:
         pos_0_1D = state.index(0)
 
-    pos_0_2D = pos1D_to_pos2D(pos_0_1D)
+    pos_0_2D = pos1D_to_pos2D(pos_0_1D, height, width)
     suc = []
 
-    # 1 - Este, 2 - Sul, 3 - Oeste, 0 - Norte
-    for i in range(4):
-        # mover peça para norte
-        if pos_0_2D[0] != 0:
-            # nv = novo
-            nv = state.copy()
-            aux = state.index(pos2D_to_pos1D([pos_0_2D[0]-1, pos_0_2D[1]]))
-            nv[pos_0_1D] = aux
-            nv[pos2D_to_pos1D([pos_0_2D[0]-1, pos_0_2D[1]])] = 0
-            suc.append(nv)
-        # mover peça para sul
-        if pos_0_2D[0] != height:
-            # nv = novo
-            nv = state.copy()
-            aux = state.index(pos2D_to_pos1D([pos_0_2D[height]-1, pos_0_2D[1]]))
-            nv[pos_0_1D] = aux
-            nv[pos2D_to_pos1D([pos_0_2D[height]-1, pos_0_2D[1]])] = 0
-            suc.append(nv)
-        # mover peça para oeste
-        if pos_0_2D[1] != 0:
-            # nv = novo
-            nv = state.copy()
-            aux = state.index(pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[0]-1]))
-            nv[pos_0_1D] = aux
-            nv[pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[0]-1])] = 0
-            suc.append(nv)
-        # mover peça para este
-        if pos_0_2D[1] != width:
-            # nv = novo
-            nv = state.copy()
-            aux = state.index(pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[width]-1]))
-            nv[pos_0_1D] = aux
-            nv[pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[width]-1])] = 0
-            suc.append(nv)
+    # Mover zero para norte
+    if pos_0_2D[0] != 0:
+        norte = pos2D_to_pos1D([pos_0_2D[0] - 1, pos_0_2D[1]], height, width)
+        nv = state.copy()
+        aux = state[norte]  # Pegar na peça por cima do zero e guardar
+        nv[pos_0_1D] = aux  # Colocar a peça por cima do zero no lugar do zero
+        nv[norte] = 0  # A posição onde estava a peça q substitui o zero, passa a ser zero
+        suc.append(nv)
+    # Mover zero para sul
+    if pos_0_2D[0] != height-1:
+        sul = pos2D_to_pos1D([pos_0_2D[0] + 1, pos_0_2D[1]], height, width)
+        nv = state.copy()
+        aux = state[sul]
+        nv[pos_0_1D] = aux
+        nv[sul] = 0
+        suc.append(nv)
+    # Mover zero para oeste
+    if pos_0_2D[1] != 0:
+        oeste = pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[1] - 1], height, width)
+        nv = state.copy()
+        aux = state[oeste]
+        nv[pos_0_1D] = aux
+        nv[oeste] = 0
+        suc.append(nv)
+    # Mover zero para este
+    if pos_0_2D[1] != width-1:
+        este = pos2D_to_pos1D([pos_0_2D[0], pos_0_2D[1] + 1], height, width)
+        nv = state.copy()
+        aux = state[este]
+        nv[pos_0_1D] = aux
+        nv[este] = 0
+        suc.append(nv)
 
+    return suc
 
 
 
@@ -85,15 +95,16 @@ def sucessors(state, height, width):
 
 # find_state(tree, state)
 
-def pos2D_to_pos1D(p, height, width):
-    return (p[0] * width + p[1])
-
-def pos1D_to_pos2D(p, height, width):
-    return([p // width, p / width])
 
 height = 4
 width = 4
 l = create_randomstate(height, width)
 show_state(l, height, width)
 print(valid_state(l, height, width))
-sucessors(l, height, width)
+suc = sucessors(l, height, width)
+
+for board in suc:
+    show_state(board, height, width)
+
+tree = [l, sucessors(l, height, width)]
+print(tree)
