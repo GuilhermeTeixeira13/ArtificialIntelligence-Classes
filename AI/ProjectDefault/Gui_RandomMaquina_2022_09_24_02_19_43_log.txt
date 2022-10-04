@@ -1,0 +1,32 @@
+Move [0 - Gui]: White Pawn (1, 3) --> (3, 3)
+Move [1 - RandomMaquina]: Black Pawn (6, 6) --> (4, 6)
+Move [2 - Gui]: White Bishop (0, 2) --> (4, 6) eaten Black Pawn
+Move [3 - RandomMaquina]: Black Pawn (6, 0) --> (5, 0)
+Move [4 - Gui]: White Bishop (4, 6) --> (6, 4) eaten Black Pawn
+Move [5 - RandomMaquina]: Black Pawn (6, 7) --> (4, 7)
+Move [6 - Gui]: White Bishop (6, 4) --> (7, 3) eaten Black Queen
+Move [7 - RandomMaquina]: Black King (7, 4) --> (7, 3) eaten White Bishop
+Move [8 - Gui]: White Pawn (1, 4) --> (3, 4)
+Move [9 - RandomMaquina]: Black Horse (7, 6) --> (5, 5)
+Move [10 - Gui]: White Bishop (0, 5) --> (5, 0) eaten Black Pawn
+Move [11 - RandomMaquina]: Black Pawn (6, 1) --> (4, 1)
+Move [12 - Gui]: White Bishop (5, 0) --> (7, 2) eaten Black Bishop
+Move [13 - RandomMaquina]: Black Horse (5, 5) --> (4, 3)
+Move [14 - Gui]: White Pawn (3, 4) --> (4, 3) eaten Black Horse
+Move [15 - RandomMaquina]: Black Tower (7, 0) --> (1, 0) eaten White Pawn
+Move [16 - Gui]: White Tower (0, 0) --> (1, 0) eaten Black Tower
+Move [17 - RandomMaquina]: Black Pawn (6, 2) --> (5, 2)
+Move [18 - Gui]: White Queen (0, 3) --> (4, 7) eaten Black Pawn
+Move [19 - RandomMaquina]: Black Tower (7, 7) --> (4, 7) eaten White Queen
+Move [20 - Gui]: White Pawn (4, 3) --> (5, 2) eaten Black Pawn
+Move [21 - RandomMaquina]: Black Tower (4, 7) --> (4, 5)
+Move [22 - Gui]: White Pawn (5, 2) --> (6, 2)
+Move [23 - RandomMaquina]: Black King (7, 3) --> (7, 4)
+Move [24 - Gui]: White Pawn (6, 2) --> (-1, 7)
+Move [25 - RandomMaquina]: Black Tower (4, 5) --> (3, 5)
+Move [26 - Gui]: White Queen (7, 1) --> (3, 5) eaten Black Tower
+Move [27 - RandomMaquina]: Black Pawn (6, 3) --> (4, 3)
+Move [28 - Gui]: White Queen (3, 5) --> (6, 5) eaten Black Pawn
+Move [29 - RandomMaquina]: Black Bishop (7, 5) --> (5, 7)
+Move [30 - Gui]: White Queen (6, 5) --> (7, 4) eaten Black King
+Player 0 - Gui: White wins. Game finished. 

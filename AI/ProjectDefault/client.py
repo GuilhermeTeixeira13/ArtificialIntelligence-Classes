@@ -377,13 +377,13 @@ kingtableblack = Reverse(kingtablewhite)
 
 kingtablewhiteEND = [
     -50, -40, -30, -20, -20, -30, -40, -50,
-                     -30, -20, -10, 0, 0, -10, -20, -30,
-                     -30, -10, 20, 30, 30, 20, -10, -30,
-                     -30, -10, 30, 40, 40, 30, -10, -30,
-                     -30, -10, 30, 40, 40, 30, -10, -30,
-                     -30, -10, 20, 30, 30, 20, -10, -30,
-                     -30, -30, 0, 0, 0, 0, -30, -30,
-                     -50, -30, -30, -30, -30, -30, -30, -50]
+    -30, -20, -10, 0, 0, -10, -20, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -30, 0, 0, 0, 0, -30, -30,
+    -50, -30, -30, -30, -30, -30, -30, -50]
 
 kingtableblackEND = Reverse(kingtablewhiteEND)
 def check_win(cur_state):
@@ -441,8 +441,6 @@ def evaluate_board():
 
     material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
 
-    # print(board)
-
     pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
     pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("ijklmnop", board)])
 
@@ -458,8 +456,13 @@ def evaluate_board():
     queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("D", board)])
     queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("d", board)])
 
-    kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("E", board)])
-    kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("e", board)])
+    # end game
+    if wp + (wk * 3) + (wb * 3) + (wr * 5) + (wq * 9) <= 13 and bp + (bk * 3) + (bb * 3) + (br * 5) + (bq * 9) <= 13:
+        kingsq = sum([kingtablewhiteEND[pos] for pos in positions_of_pieces("E", board)])
+        kingsq = kingsq + sum([-kingtableblackEND[pos] for pos in positions_of_pieces("e", board)])
+    else:
+        kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("E", board)])
+        kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("e", board)])
 
     eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
 
@@ -542,19 +545,17 @@ def selectmove(depth):
 def decide_move(state, play):
     global board
     board = state
-    win = False
+    win_in_next_play = False
 
+    # Se numa das próximas jogadas tenho oportunidade de ganhar, ent fazer logo essa jogada.
     moves = sucessor_states(board, play)
     for m in moves:
-        #print(str(check_win(m)) + " == " + str(play))
         if check_win(m) == play:
-            print("Encontrou!!")
-            win = True
+            win_in_next_play = True
             move = m
             break
 
-    #print(win)
-    if win == False:
+    if not win_in_next_play:
         move = selectmove(1)
 
     return move
