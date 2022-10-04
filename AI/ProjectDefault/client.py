@@ -1,9 +1,11 @@
 import socket, sys
-from collections import Counter # Added by me
-import re # Added by me
 
+from collections import Counter  # Added by me
+import re  # Added by me
+
+board = ""  # Added by me
 interactive_flag = False
-board = "" # Added by me
+
 
 def pos2_to_pos1(x2):
     return x2[0] * 8 + x2[1]
@@ -273,35 +275,26 @@ def sucessor_states(state, player):
     return ret
 
 
-# Usar uma pilha para o board.push() e board.pop() ou uma variável??
+# Added by me (copy from RandomPlays.py)
+def check_win(cur_state):
+    # If the black king is not on the boar, then the white player wins
+    if cur_state.find('e') < 0:
+        return 1
+    # Vice versa
+    if cur_state.find('E') < 0:
+        return 0
+    return 2
 
-# Para o board.is_captured() podemos verificar a quantidade de peças comparativamente ao estado anterior.
 
-# Criar a função evaluateBoard() que vai:
-# 1 - Somar a quantidade de peças do tabuleiro (minhas e do adversário) tendo em conta:
-#   Bishop > 3 Pawns & Knight > 3 Pawns
-#   Bishop > Knight
-#   Bishop + Knight > Rook + Pawn
-# 2 - Avaliar a posição das minhas peças no tabuleiro tendo em conta que
-# posições favoráveis têm um valor mais alto (predefinido).
-# Se eu for o Branco (0) tem de retornar eval, se for o preto(1) retorna -eval
-
-# Criar a função quiesce(alpha, beta) que vai:
-# O objetivo desta pesquisa é avaliar apenas as posições “tranquilas”, ou seja,
-#   as posições onde não há jogadas táticas vencedoras a serem feitas.
-# Esta busca é necessária para evitar o efeito de horizonte que é causado
-#   pela limitação de profundidade do algoritmo de busca.
-
-# Criar a função alphabeta(alpha, beta, depthleft):
-# Agora, vamos explorar nosso algoritmo minimax. É uma regra de decisão usada em
-# inteligência artificial, teoria da decisão, teoria dos jogos, estatística e filosofia
-# para minimizar a possível perda no pior cenário. Em palavras simples, a cada passo,
-# ele assume que o jogador A está tentando maximizar suas chances de ganhar e,
-# no próximo turno, o jogador B está tentando minimizar as chances de ganhar.
-
-def Reverse(lst):
+# Function that reverse a list
+def reverse(lst):
     new_lst = lst[::-1]
     return new_lst
+
+
+#   Square tables that will help us evaluate our board pieces and the values will
+# be set in a 8x8 matrix such as in chess such that it must have a higher
+# value at favorable positions and a lower value at a non-favorable place
 
 pawntablewhite = [
     0, 0, 0, 0, 0, 0, 0, 0,
@@ -313,7 +306,7 @@ pawntablewhite = [
     5, 10, 10, -25, -25, 10, 10, 5,
     0, 0, 0, 0, 0, 0, 0, 0]
 
-pawntableblack = Reverse(pawntablewhite)
+pawntableblack = reverse(pawntablewhite)
 
 knighttablewhite = [
     -50, -40, -30, -30, -30, -30, -40, -50,
@@ -325,7 +318,7 @@ knighttablewhite = [
     -40, -20, 0, 5, 5, 0, -20, -40,
     -50, -40, -20, -30, -30, -20, -40, -50]
 
-knighttableblack = Reverse(knighttablewhite)
+knighttableblack = reverse(knighttablewhite)
 
 bishopstablewhite = [
     -20, -10, -10, -10, -10, -10, -10, -20,
@@ -337,7 +330,7 @@ bishopstablewhite = [
     -10, 5, 0, 0, 0, 0, 5, -10,
     -20, -10, -40, -10, -10, -40, -10, -20]
 
-bishopstableblack = Reverse(bishopstablewhite)
+bishopstableblack = reverse(bishopstablewhite)
 
 rookstablewhite = [
     -20, -10, -10, -10, -10, -10, -10, -20,
@@ -349,7 +342,7 @@ rookstablewhite = [
     -10, 5, 0, 0, 0, 0, 5, -10,
     -20, -10, -10, -10, -10, -10, -10, -20]
 
-rookstableblack = Reverse(rookstablewhite)
+rookstableblack = reverse(rookstablewhite)
 
 queentablewhite = [
     -20, -10, -10, -5, -5, -10, -10, -20,
@@ -361,7 +354,7 @@ queentablewhite = [
     -10, 0, 5, 0, 0, 0, 0, -10,
     -20, -10, -10, -5, -5, -10, -10, -20]
 
-queentableblack = Reverse(queentablewhite)
+queentableblack = reverse(queentablewhite)
 
 kingtablewhite = [
     -30, -40, -40, -50, -50, -40, -40, -30,
@@ -373,7 +366,7 @@ kingtablewhite = [
     20, 20, 0, 0, 0, 0, 20, 20,
     20, 30, 10, 0, 0, 10, 30, 20]
 
-kingtableblack = Reverse(kingtablewhite)
+kingtableblack = reverse(kingtablewhite)
 
 kingtablewhiteEND = [
     -50, -40, -30, -20, -20, -30, -40, -50,
@@ -385,26 +378,19 @@ kingtablewhiteEND = [
     -30, -30, 0, 0, 0, 0, -30, -30,
     -50, -30, -30, -30, -30, -30, -30, -50]
 
-kingtableblackEND = Reverse(kingtablewhiteEND)
-def check_win(cur_state):
-    # If the black king is not on the boar, then the white player wins
-    if cur_state.find('e') < 0:
-        return 1
-    # Vice versa
-    if cur_state.find('E') < 0:
-        return 0
-    return 2
+kingtableblackEND = reverse(kingtablewhiteEND)
 
 
-def is_checkmate(board, play):
-    suc = sucessor_states(board, play)
+# Check if the "board" can result in a checkmate for the "player", in one of the next plays
+def is_checkmate(board, player):
+    suc = sucessor_states(board, player)
     for move in suc:
-        # Se uma das próximas jogadas der a vitória ao meu oponent, ent estou sob checkmate atualmente
-        if check_win(move) == (1 - play):
+        if check_win(move) == (1 - player):
             return True
     return False
 
-# Criar função que dada uma string com determinadas peças "CF" insere dentro de uma lista todas as posições dessas peças no tabuleiro. [1, 25]
+
+# Build a list with the positions of the given "pieces" on the "board"
 def positions_of_pieces(pieces, board):
     result = []
     lst = list(pieces)
@@ -415,16 +401,32 @@ def positions_of_pieces(pieces, board):
     return result
 
 
+# Analyses 2 states of the board ("board" and "move") and checks if the "player" made a capture
+def is_capture(board, move, player):
+    if player == 0:
+        oppontent_pieces_before = positions_of_pieces("abcdefghijklmnop", board)
+        oppontent_pieces_after = positions_of_pieces("abcdefghijklmnop", move)
+    else:
+        oppontent_pieces_before = positions_of_pieces("IJKLMNOPABCDEFGH", board)
+        oppontent_pieces_after = positions_of_pieces("IJKLMNOPABCDEFGH", move)
+
+    if oppontent_pieces_after < oppontent_pieces_before:
+        return True
+    else:
+        return False
+
+
 def evaluate_board():
     global board, player
 
+    # If player is under checkmate, then player loses
     if is_checkmate(board, player):
-        print("posso morrer se n fugir")
         return -9999
+    # IF the oppontent is under checkmate, then player wins
     elif is_checkmate(board, 1 - player):
-        print("posso ganhar se fizer o movimento certo")
         return 9999
 
+    # Counts how many of each piece the player has
     counter = Counter(board)
     wp = counter["I"] + counter["J"] + counter["K"] + counter["L"] + counter["M"] + counter["N"] + counter["O"] + \
          counter["P"]
@@ -439,7 +441,12 @@ def evaluate_board():
     wq = counter["D"]
     bq = counter["d"]
 
+    #   The material score is calculated by the summation of all respective piece’s weights multiplied
+    # by the difference between the number of that respective piece between white and black.
     material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+
+    #   The individual pieces score is the sum of piece-square values of positions where the respective
+    # piece is present at that instance of the game.
 
     pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
     pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("ijklmnop", board)])
@@ -464,6 +471,9 @@ def evaluate_board():
         kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("E", board)])
         kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("e", board)])
 
+    #   It will return the summation of the material scores and the individual scores for white and when
+    # it comes for black, let’s negate it.
+
     eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
 
     if player == 0:
@@ -471,19 +481,10 @@ def evaluate_board():
     else:
         return -eval
 
-def is_capture(board, move, play):
-    if play == 0:
-        oppontent_pieces_before = positions_of_pieces("abcdefghijklmnop", board)
-        oppontent_pieces_after = positions_of_pieces("abcdefghijklmnop", move)
-    else:
-        oppontent_pieces_before = positions_of_pieces("IJKLMNOPABCDEFGH", board)
-        oppontent_pieces_after = positions_of_pieces("IJKLMNOPABCDEFGH", move)
 
-    if oppontent_pieces_after < oppontent_pieces_before:
-        return True
-    else:
-        return False
-
+#   Quiescence search, the purpose of this search is to only evaluate the positions where there are no winning
+# tactical moves to be made.
+#   This search is needed to avoid the horizon effect which is caused by the depth limitation of the search algorithm.
 def quiesce(alpha, beta):
     global board, player
 
@@ -505,24 +506,29 @@ def quiesce(alpha, beta):
                 alpha = score
     return alpha
 
+
+#   Alpha-beta pruning for the optimization of our execution speed
+# It eliminates most of the unnecessary iterations
 def alphabeta(alpha, beta, depthleft):
     global board, player
 
     bestscore = -9999
-    if (depthleft == 0):
+    if depthleft == 0:
         return quiesce(alpha, beta)
     for move in sucessor_states(board, player):
         board = move
         score = -alphabeta(-beta, -alpha, depthleft - 1)
         board = ""
-        if (score >= beta):
+        if score >= beta:
             return score
-        if (score > bestscore):
+        if score > bestscore:
             bestscore = score
-        if (score > alpha):
+        if score > alpha:
             alpha = score
+
     return bestscore
 
+# Searches for the best move in a certain depth
 def selectmove(depth):
     global board, player
 
@@ -536,13 +542,13 @@ def selectmove(depth):
         if boardValue > bestValue:
             bestValue = boardValue
             bestMove = move
-        if (boardValue > alpha):
+        if boardValue > alpha:
             alpha = boardValue
         board = ""
     return bestMove
 
-
-def decide_move(state, play):
+# Given a board "state", it will calculate the best move possible for the "player"
+def decide_move(state, player):
     global board
     board = state
     win_in_next_play = False
@@ -558,17 +564,17 @@ def decide_move(state, play):
     if not win_in_next_play:
         move = selectmove(1)
 
-    return move
+    return decided_move
 
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))                             #connecting client to server
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      # socket initialization
+client.connect((sys.argv[1], int(sys.argv[2])))                 # connecting client to server
 
 client.send(sys.argv[3].encode('ascii'))
 
 player = int(sys.argv[4])
 
-while True:                                                 #making valid connection
+while True:                                                     # making valid connection
     while True:
         message = client.recv(1024).decode('ascii')
         if len(message) > 0:
