@@ -95,36 +95,77 @@ def win(board):
         return False
     return True
 
-def build_tree(tree, board, height, width):
-    suc = sucessors(board, height, width)
+# [Estado, [E1, ...]]
 
-    if tree == []:
-        tree = [board, [suc]]
+def find_node(tree, state):
+    if len(tree) == 0:
+        return None
+    if tree[0] == state:
+        return tree
+    for t in tree[1]:
+        aux = find_node(t, state)
+        if aux is not None:
+            return aux
+    return None
 
-    for s in suc:
-        if(win(s) == False):
-            build_tree(trees.insert_node_tree(tree, [s, [[sucessors(s, height, width)]]], board), s, height, width)
+def insertTree(tree, new, father):
+    nd = find_node(tree, father)
 
+    # Se não se encontrar o pai, então retorna a árvore
+    if nd is None:
+        return tree
+    # Se o pai encontrado não tiver filhos, o filho passa a ser "new"
+    if len(nd[1]) == 0:
+        nd[1] = [new]
+        return tree
+
+    # Se o pai tiver filhos, então insere na lista dos filhos o "new"
+    nd[1].append(new)
     return tree
 
-# [Estado, [E1, E2, E3]]
+def show_tree(tree, height, width):
+    if len(tree) == 0:
+        return
+    show_state(tree[0], height, width)
+    for t in tree[1]:
+        show_tree(t, height, width)
 
-# def show_tree(state)
+def count_tree(tree):
+    if len(tree) == 0:
+        return 0
+    lev = [0]
+    for t in tree[1]:
+        lev.extend([count_levels(t)])
+    return max(lev) + 1
 
-# find_state(tree, state)
+def expand_tree(tree, N, height, width):
+
+    #print(not win(tree[0]))
+    #print(N > 0)
+    if not win(tree[0]) and N > 0:
+        for s in sucessors(tree[0], height, width):
+            insertTree(tree, [s, []], tree[0])
+
+        for f in tree[1]:
+            expand_tree(f, N-1, height, width)
+    else:
+        return tree
 
 
 height = 4
 width = 4
 l = create_randomstate(height, width)
-show_state(l, height, width)
-print(valid_state(l, height, width))
+#show_state(l, height, width)
+#print(valid_state(l, height, width))
 suc = sucessors(l, height, width)
 
-for board in suc:
-    show_state(board, height, width)
+#for board in suc:
+    #show_state(board, height, width)
 
-print("win = "+str(win(l)))
+#print("win = "+str(win(l)))
 
-tree = build_tree([], l, height, width)
-#print(tree)
+tree = [l, []]
+
+expand_tree(tree, 5, height, width)
+
+show_tree(tree, height, width)
