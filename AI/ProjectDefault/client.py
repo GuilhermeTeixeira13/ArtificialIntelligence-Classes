@@ -463,7 +463,7 @@ def evaluate_board():
     queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("D", board)])
     queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("d", board)])
 
-    # end game
+    # In case of end game, we use a different piece-square table for the king (else case):
     if wp + (wk * 3) + (wb * 3) + (wr * 5) + (wq * 9) <= 13 and bp + (bk * 3) + (bb * 3) + (br * 5) + (bq * 9) <= 13:
         kingsq = sum([kingtablewhiteEND[pos] for pos in positions_of_pieces("E", board)])
         kingsq = kingsq + sum([-kingtableblackEND[pos] for pos in positions_of_pieces("e", board)])
