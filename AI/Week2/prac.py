@@ -154,18 +154,18 @@ def expand_tree(tree, N, height, width):
 
 height = 4
 width = 4
-l = create_randomstate(height, width)
-#show_state(l, height, width)
+inicial_board = create_randomstate(height, width)
+#show_state(l , height, width)
 #print(valid_state(l, height, width))
-suc = sucessors(l, height, width)
+suc = sucessors(inicial_board, height, width)
 
 #for board in suc:
     #show_state(board, height, width)
 
 #print("win = "+str(win(l)))
 
-tree = [l, []]
+tree = [inicial_board, []]
 
-expand_tree(tree, 5, height, width)
-
+expand_tree(tree, 3, height, width)
+print(tree)
 show_tree(tree, height, width)
