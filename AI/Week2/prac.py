@@ -130,18 +130,16 @@ def show_tree(tree, height, width):
     for t in tree[1]:
         show_tree(t, height, width)
 
+
 def count_tree(tree):
     if len(tree) == 0:
         return 0
     lev = [0]
     for t in tree[1]:
-        lev.extend([count_levels(t)])
+        lev.extend([count_tree(t)])
     return max(lev) + 1
 
 def expand_tree(tree, N, height, width):
-
-    #print(not win(tree[0]))
-    #print(N > 0)
     if not win(tree[0]) and N > 0:
         for s in sucessors(tree[0], height, width):
             insertTree(tree, [s, []], tree[0])
@@ -149,23 +147,26 @@ def expand_tree(tree, N, height, width):
         for f in tree[1]:
             expand_tree(f, N-1, height, width)
     else:
+        if(win(tree[0])):
+            show_state(tree[0], height, width)
         return tree
 
 
 height = 4
 width = 4
 inicial_board = create_randomstate(height, width)
-#show_state(l , height, width)
-#print(valid_state(l, height, width))
-suc = sucessors(inicial_board, height, width)
+print("inicial:")
+show_state(inicial_board , height, width)
 
+#print(valid_state(l, height, width))
+
+#suc = sucessors(inicial_board, height, width)
+#print("sucessores:")
 #for board in suc:
     #show_state(board, height, width)
 
-#print("win = "+str(win(l)))
-
 tree = [inicial_board, []]
+expand_tree(tree, 12, height, width)
 
-expand_tree(tree, 3, height, width)
-print(tree)
-show_tree(tree, height, width)
+#print(tree)
+#show_tree(tree, height, width)
