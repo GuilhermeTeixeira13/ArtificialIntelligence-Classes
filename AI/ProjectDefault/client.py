@@ -381,15 +381,6 @@ kingtablewhiteEND = [
 kingtableblackEND = reverse(kingtablewhiteEND)
 
 
-# Check if the "board" can result in a checkmate for the "player", in one of the next plays
-def is_checkmate(board, player):
-    suc = sucessor_states(board, player)
-    for move in suc:
-        if check_win(move) == (1 - player):
-            return True
-    return False
-
-
 # Build a list with the positions of the given "pieces" on the "board"
 def positions_of_pieces(pieces, board):
     result = []
@@ -418,13 +409,6 @@ def is_capture(board, move, player):
 
 def evaluate_board():
     global board, player
-
-    # If player is under checkmate, then player loses
-    if is_checkmate(board, player):
-        return -9999
-    # IF the oppontent is under checkmate, then player wins
-    elif is_checkmate(board, 1 - player):
-        return 9999
 
     # Counts how many of each piece the player has
     counter = Counter(board)
@@ -554,15 +538,15 @@ def decide_move(state, player):
     win_in_next_play = False
 
     # Se numa das próximas jogadas tenho oportunidade de ganhar, ent fazer logo essa jogada.
-    moves = sucessor_states(board, play)
+    moves = sucessor_states(board, player)
     for m in moves:
-        if check_win(m) == play:
+        if check_win(m) == player:
             win_in_next_play = True
-            move = m
+            decided_move = m
             break
 
     if not win_in_next_play:
-        move = selectmove(1)
+        decided_move = selectmove(1)
 
     return decided_move
 
