@@ -155,8 +155,10 @@ def expand_tree(tree, N, height, width):
 height = 4
 width = 4
 inicial_board = create_randomstate(height, width)
+almost_win = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15]
+
 print("inicial:")
-show_state(inicial_board , height, width)
+show_state(almost_win , height, width)
 
 #print(valid_state(l, height, width))
 
@@ -165,8 +167,7 @@ show_state(inicial_board , height, width)
 #for board in suc:
     #show_state(board, height, width)
 
-tree = [inicial_board, []]
-expand_tree(tree, 12, height, width)
-
+tree = [almost_win, []]
+expand_tree(tree, 11, height, width)
 #print(tree)
 #show_tree(tree, height, width)
