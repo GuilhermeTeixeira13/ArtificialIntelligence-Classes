@@ -539,16 +539,16 @@ def decide_move(state, player):
     depth = 1
 
     # If one of the next moves ends up in a win for me, then choose that move.
-    moves = sucessor_states(board, play)
+    moves = sucessor_states(board, player)
     for m in moves:
-        if check_win(m) == play:
+        if check_win(m) == player:
             win_in_next_play = True
-            move = m
+            decided_move = m
             break
 
     # Else, search for the best move possible.
     if not win_in_next_play:
-        move = selectmove(depth)
+        decided_move = selectmove(depth)
 
     return decided_move
 

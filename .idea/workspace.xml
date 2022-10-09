@@ -1,7 +1,43 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="bdd09ebb-c742-4ec4-8ed2-316757fd43e1" name="Changes" comment="" />
+    <list default="true" id="bdd09ebb-c742-4ec4-8ed2-316757fd43e1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_14_22_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_17_12_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_19_42_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_22_08_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_24_48_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_26_36_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_29_33_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_30_56_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_33_14_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_35_15_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_22_34_58_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_23_04_20_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_23_29_43_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_27_01_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_43_57_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_51_32_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_58_30_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_02_05_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_03_55_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_18_12_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_27_47_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_12_22_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_20_17_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_24_13_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_37_13_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_42_44_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_58_21_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_03_05_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_03_44_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_25_16_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_39_10_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_52_51_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_22_04_06_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_22_19_07_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ProjectDefault/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/ProjectDefault/client.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
