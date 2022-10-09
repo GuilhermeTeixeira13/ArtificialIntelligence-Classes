@@ -87,11 +87,11 @@ def sucessors(state, height, width):
 
     return suc
 
-def win(board):
-    for num in range(1, 16):
+def win(board, height, width):
+    for num in range(1, height*width):
         if board[num-1] != num:
             return False
-    if board[15] != 0:
+    if board[height*width - 1] != 0:
         return False
     return True
 
@@ -109,17 +109,10 @@ def find_node(tree, state):
     return None
 
 def insertTree(tree, new, father):
-    nd = find_node(tree, father)
+    nd = find_node(tree, father[0])
 
-    # Se não se encontrar o pai, então retorna a árvore
     if nd is None:
-        return tree
-    # Se o pai encontrado não tiver filhos, o filho passa a ser "new"
-    if len(nd[1]) == 0:
-        nd[1] = [new]
-        return tree
-
-    # Se o pai tiver filhos, então insere na lista dos filhos o "new"
+        return None
     nd[1].append(new)
     return tree
 
@@ -140,34 +133,55 @@ def count_tree(tree):
     return max(lev) + 1
 
 def expand_tree(tree, N, height, width):
-    if not win(tree[0]) and N > 0:
-        for s in sucessors(tree[0], height, width):
-            insertTree(tree, [s, []], tree[0])
-
-        for f in tree[1]:
-            expand_tree(f, N-1, height, width)
-    else:
-        if(win(tree[0])):
-            show_state(tree[0], height, width)
+    if N == 0:
         return tree
+    suc = sucessors(tree[0], height, width)
+    for s in suc:
+        tree = insertTree(tree, expand_tree([s, []], N - 1, height, width), tree)
+    return tree
+
+def show_tree(tr, cur_d, h, w):
+    if len(tr) == 0:
+        return
+    print('[%d]-------------------------------------' % cur_d)
+    for ih in range(h):
+        for iw in range(w):
+            print('%d\t' % tr[0][ih * w + iw], end='')
+        print('')
+    print('-------------------------------------')
+    for t in tr[1]:
+        show_tree(t, cur_d +1, h, w)
 
 
-height = 4
-width = 4
-inicial_board = create_randomstate(height, width)
-almost_win = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 0, 13, 14, 15]
+def minimal(tree, steps, depth, height, width):
+    minimal_steps = steps
+    if len(tree) == 0 or (steps == depth and win(tree[0], height, width) == False):
+        minimal_steps = -1
+    elif win(tree[0], height, width):
+        minimal_steps = steps
+    else:
+        for t in tree[1]:
+            minimal_steps = minimal(t, steps+1, depth, height, width)
 
-print("inicial:")
+    return minimal_steps
+
+def minimal_number_steps(inicial_state, depth, height, width):
+    tree = [inicial_state, []]
+    tree = expand_tree(tree, depth, height, width)
+
+    return minimal(tree, 0, depth, height, width)
+
+
+height = 3
+width = 3
+#inicial_board = create_randomstate(height, width)
+almost_win = [1, 2, 3, 4, 5, 6, 0, 7, 8]
+
+print("Estado inicial:")
 show_state(almost_win , height, width)
 
-#print(valid_state(l, height, width))
+#tree = expand_tree([almost_win,[]], 2, height, width)
+#print("\n\nÁrvore:\n")
+#show_tree(tree, 0, height, width)
 
-#suc = sucessors(inicial_board, height, width)
-#print("sucessores:")
-#for board in suc:
-    #show_state(board, height, width)
-
-tree = [almost_win, []]
-expand_tree(tree, 11, height, width)
-#print(tree)
-#show_tree(tree, height, width)
+print("\n\nO número mínimo de passos é: "+ str(minimal_number_steps(almost_win, 12, height, width)))
