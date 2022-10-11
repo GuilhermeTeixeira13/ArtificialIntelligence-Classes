@@ -1,0 +1,2 @@
+Move [0 - MAQUINA]: White Pawn (1, 5) --> (2, 5)
+Timeout by 1 - ROBO: Black. Player 0 - MAQUINA: White wins. Game finished. 

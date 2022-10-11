@@ -1,0 +1,39 @@
+Move [0 - MAQUINA]: White Pawn (1, 0) --> (2, 0)
+Move [1 - ROBO]: Black Horse (7, 6) --> (5, 5)
+Move [2 - MAQUINA]: White Pawn (1, 7) --> (2, 7)
+Move [3 - ROBO]: Black Pawn (6, 3) --> (4, 3)
+Move [4 - MAQUINA]: White Pawn (1, 2) --> (2, 2)
+Move [5 - ROBO]: Black Bishop (7, 2) --> (5, 4)
+Move [6 - MAQUINA]: White Horse (0, 6) --> (2, 5)
+Move [7 - ROBO]: Black Horse (7, 1) --> (6, 3)
+Move [8 - MAQUINA]: White Horse (2, 5) --> (3, 3)
+Move [9 - ROBO]: Black Bishop (5, 4) --> (2, 7) eaten White Pawn
+Move [10 - MAQUINA]: White Tower (0, 7) --> (1, 7)
+Move [11 - ROBO]: Black Bishop (2, 7) --> (1, 6) eaten White Pawn
+Move [12 - MAQUINA]: White Horse (3, 3) --> (1, 2)
+Move [13 - ROBO]: Black Bishop (1, 6) --> (0, 5) eaten White Bishop
+Move [14 - MAQUINA]: White Tower (1, 7) --> (0, 7)
+Move [15 - ROBO]: Black Horse (6, 3) --> (4, 4)
+Move [16 - MAQUINA]: White Pawn (1, 5) --> (3, 5)
+Move [17 - ROBO]: Black Bishop (0, 5) --> (1, 4) eaten White Pawn
+Move [18 - MAQUINA]: White Horse (1, 2) --> (3, 3)
+Move [19 - ROBO]: Black Bishop (1, 4) --> (0, 3) eaten White Queen
+Move [20 - MAQUINA]: White Tower (0, 7) --> (6, 7) eaten Black Pawn
+Move [21 - ROBO]: Black Tower (7, 7) --> (6, 7) eaten White Tower
+Move [22 - MAQUINA]: White King (0, 4) --> (0, 3) eaten Black Bishop
+Move [23 - ROBO]: Black Pawn (6, 4) --> (5, 4)
+Move [24 - MAQUINA]: White Pawn (2, 2) --> (3, 2)
+Move [25 - ROBO]: Black Bishop (7, 5) --> (2, 0) eaten White Pawn
+Move [26 - MAQUINA]: White King (0, 3) --> (0, 4)
+Move [27 - ROBO]: Black Bishop (2, 0) --> (1, 1) eaten White Pawn
+Move [28 - MAQUINA]: White King (0, 4) --> (1, 5)
+Move [29 - ROBO]: Black Horse (4, 4) --> (3, 2) eaten White Pawn
+Move [30 - MAQUINA]: White Pawn (1, 3) --> (2, 3)
+Move [31 - ROBO]: Black Bishop (1, 1) --> (0, 0) eaten White Tower
+Move [32 - MAQUINA]: White Horse (3, 3) --> (5, 2)
+Move [33 - ROBO]: Black Pawn (6, 1) --> (5, 2) eaten White Horse
+Move [34 - MAQUINA]: White King (1, 5) --> (2, 5)
+Move [35 - ROBO]: Black Tower (7, 0) --> (7, 2)
+Move [36 - MAQUINA]: White King (2, 5) --> (2, 4)
+Move [37 - ROBO]: Black Horse (3, 2) --> (2, 4) eaten White King
+Player 1 - ROBO: Black wins. Game finished. 

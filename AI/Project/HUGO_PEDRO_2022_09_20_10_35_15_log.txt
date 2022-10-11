@@ -1,0 +1,8 @@
+Move [0 - HUGO]: White Pawn (1, 0) --> (2, 0)
+Move [1 - PEDRO]: Black Pawn (6, 3) --> (4, 3)
+Move [2 - HUGO]: White Pawn (1, 3) --> (2, 3)
+Move [3 - PEDRO]: Black Pawn (6, 7) --> (5, 7)
+Move [4 - HUGO]: White Pawn (2, 3) --> (3, 3)
+Move [5 - PEDRO]: Black Bishop (7, 2) --> (4, 5)
+Move [6 - HUGO]: White Pawn (3, 3) --> (5, 3)
+Invalid move by 0 - HUGO. Player 1 - PEDRO wins. Game finished. 

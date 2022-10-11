@@ -1,0 +1,2 @@
+Move [0 - HUGO]: White Pawn (1, 0) --> (2, 0)
+Timeout by 1 - PEDRO: Black. Player 0 - HUGO: White wins. Game finished. 
