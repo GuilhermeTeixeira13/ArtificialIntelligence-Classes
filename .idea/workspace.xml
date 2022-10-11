@@ -124,10 +124,10 @@
       <method v="2" />
     </configuration>
     <list>
-      <item itemvalue="Python.6" />
       <item itemvalue="Python.InterpreterPython" />
-      <item itemvalue="Python.prac" />
       <item itemvalue="Python.trees" />
+      <item itemvalue="Python.6" />
+      <item itemvalue="Python.prac" />
     </list>
     <recent_temporary>
       <list>
