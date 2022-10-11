@@ -1,0 +1,2 @@
+Move [0 - MAQUINA]: White Horse (0, 6) --> (2, 7)
+Timeout by 1 - ROBO: Black. Player 0 - MAQUINA: White wins. Game finished. 

@@ -1,0 +1,32 @@
+Move [0 - ROBO]: White Pawn (1, 3) --> (3, 3)
+Move [1 - MAQUINA]: Black Pawn (6, 1) --> (5, 1)
+Move [2 - ROBO]: White Pawn (1, 4) --> (3, 4)
+Move [3 - MAQUINA]: Black Horse (7, 1) --> (5, 2)
+Move [4 - ROBO]: White Bishop (0, 5) --> (4, 1)
+Move [5 - MAQUINA]: Black Pawn (6, 0) --> (5, 0)
+Move [6 - ROBO]: White Bishop (4, 1) --> (5, 2) eaten Black Horse
+Move [7 - MAQUINA]: Black Pawn (5, 1) --> (4, 1)
+Move [8 - ROBO]: White Bishop (5, 2) --> (7, 0) eaten Black Tower
+Move [9 - MAQUINA]: Black Pawn (6, 3) --> (4, 3)
+Move [10 - ROBO]: White Pawn (3, 4) --> (4, 3) eaten Black Pawn
+Move [11 - MAQUINA]: Black Queen (7, 3) --> (6, 3)
+Move [12 - ROBO]: White Horse (0, 1) --> (2, 2)
+Move [13 - MAQUINA]: Black Pawn (6, 5) --> (4, 5)
+Move [14 - ROBO]: White Horse (2, 2) --> (4, 1) eaten Black Pawn
+Move [15 - MAQUINA]: Black King (7, 4) --> (6, 5)
+Move [16 - ROBO]: White Horse (4, 1) --> (6, 2) eaten Black Pawn
+Move [17 - MAQUINA]: Black Pawn (6, 4) --> (4, 4)
+Move [18 - ROBO]: White Horse (6, 2) --> (5, 0) eaten Black Pawn
+Move [19 - MAQUINA]: Black Pawn (4, 5) --> (3, 5)
+Move [20 - ROBO]: White Bishop (0, 2) --> (3, 5) eaten Black Pawn
+Move [21 - MAQUINA]: Black Queen (6, 3) --> (6, 1)
+Move [22 - ROBO]: White Bishop (7, 0) --> (6, 1) eaten Black Queen
+Move [23 - MAQUINA]: Black Pawn (6, 6) --> (5, 6)
+Move [24 - ROBO]: White Bishop (6, 1) --> (7, 2) eaten Black Bishop
+Move [25 - MAQUINA]: Black Bishop (7, 5) --> (3, 1)
+Move [26 - ROBO]: White Horse (5, 0) --> (3, 1) eaten Black Bishop
+Move [27 - MAQUINA]: Black Pawn (6, 7) --> (5, 7)
+Move [28 - ROBO]: White Bishop (3, 5) --> (4, 4) eaten Black Pawn
+Move [29 - MAQUINA]: Black King (6, 5) --> (5, 5)
+Move [30 - ROBO]: White Bishop (4, 4) --> (5, 5) eaten Black King
+Player 0 - ROBO: White wins. Game finished. 

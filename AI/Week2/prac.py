@@ -153,9 +153,9 @@ def show_tree(tr, cur_d, h, w):
         show_tree(t, cur_d +1, h, w)
 
 
-def minimal(tree, steps, depth, height, width):
+'''def minimal(tree, steps, depth, height, width):
     minimal_steps = steps
-    if len(tree) == 0 or (steps == depth and win(tree[0], height, width) == False):
+    if len(tree) == 0 or (steps == depth and win(tree[0], height, width) is False):
         minimal_steps = -1
     elif win(tree[0], height, width):
         minimal_steps = steps
@@ -169,19 +169,95 @@ def minimal_number_steps(inicial_state, depth, height, width):
     tree = [inicial_state, []]
     tree = expand_tree(tree, depth, height, width)
 
-    return minimal(tree, 0, depth, height, width)
+    return minimal(tree, 0, depth, height, width)'''
+
+
+
+# Fila
+def BFS(inicial_state, height, width):
+    done = []
+    todo = [inicial_state]
+
+    while len(todo) > 0:
+        x = todo.pop(0)
+        if win(x, height, width):
+            return x
+        suc = sucessors(x, height, width)
+        for s in suc:
+            if s in done:
+                continue
+            todo.append(s)
+        done.append(x)
+
+    return None
+
+# Pilha
+def DFS(inicial_state, height, width):
+    done = []
+    todo = [inicial_state]
+
+    while len(todo) > 0:
+        x = todo.pop()
+        if win(x, height, width):
+            return x
+        suc = sucessors(x, height, width)
+        for s in suc:
+            if s in done:
+                continue
+            todo.append(s)
+        done.append(x)
+
+    return None
+
+def ObjectiveFunction(board, height, width):
+    count_erradas = 0
+
+    # 1 a 15
+    for i in range(1, height * width):
+        if(board[i-1] != i):
+            count_erradas += 1
+
+    if(board[height * width -1] != 0):
+        count_erradas += 1
+
+    return count_erradas
+
+def AASTERISCO(inicial_state, height, width):
+    done = []
+    todo = [inicial_state]
+    count_steps = 0
+
+    while len(todo) > 0:
+        x = todo.pop()
+        if win(x, height, width):
+            return x
+        suc = sucessors(x, height, width)
+        count_steps += 1
+        for s in suc:
+            if (s not in done) and (s not in todo):
+                # Na função f, mais pontos é mau, menos é bom
+                print(ObjectiveFunction(s, height, width)+count_steps)
+                todo.insert(ObjectiveFunction(s, height, width)+count_steps, s)
+        done.append(x)
+
+    return None
 
 
 height = 3
 width = 3
-#inicial_board = create_randomstate(height, width)
-almost_win = [1, 2, 3, 4, 5, 6, 0, 7, 8]
+
+inicial_board = create_randomstate(height, width)
+almost_win = [1, 2, 3, 4, 5, 0, 6, 7, 8]
 
 print("Estado inicial:")
-show_state(almost_win , height, width)
+show_state(inicial_board, height, width)
 
 #tree = expand_tree([almost_win,[]], 2, height, width)
 #print("\n\nÁrvore:\n")
 #show_tree(tree, 0, height, width)
 
-print("\n\nO número mínimo de passos é: "+ str(minimal_number_steps(almost_win, 12, height, width)))
+show_state(BFS(inicial_board, height, width), height, width)
+
+#show_state(DFS(almost_win, height, width), height, width)
+
+#show_state(AASTERISCO(almost_win, height, width), height, width)

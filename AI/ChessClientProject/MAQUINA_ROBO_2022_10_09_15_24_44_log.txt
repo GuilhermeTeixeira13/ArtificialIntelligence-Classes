@@ -1,0 +1,43 @@
+Move [0 - MAQUINA]: White Pawn (1, 3) --> (3, 3)
+Move [1 - ROBO]: Black Horse (7, 1) --> (5, 2)
+Move [2 - MAQUINA]: White Horse (0, 1) --> (2, 0)
+Move [3 - ROBO]: Black Horse (7, 6) --> (5, 5)
+Move [4 - MAQUINA]: White Tower (0, 0) --> (0, 1)
+Move [5 - ROBO]: Black Horse (5, 2) --> (3, 3) eaten White Pawn
+Move [6 - MAQUINA]: White Pawn (1, 2) --> (3, 2)
+Move [7 - ROBO]: Black Horse (3, 3) --> (1, 4) eaten White Pawn
+Move [8 - MAQUINA]: White Pawn (1, 7) --> (2, 7)
+Move [9 - ROBO]: Black Horse (1, 4) --> (0, 2) eaten White Bishop
+Move [10 - MAQUINA]: White Queen (0, 3) --> (5, 3)
+Move [11 - ROBO]: Black Pawn (6, 4) --> (4, 4)
+Move [12 - MAQUINA]: White Horse (0, 6) --> (2, 5)
+Move [13 - ROBO]: Black Pawn (6, 3) --> (4, 3)
+Move [14 - MAQUINA]: White Tower (0, 1) --> (0, 0)
+Move [15 - ROBO]: Black Queen (7, 3) --> (5, 3) eaten White Queen
+Move [16 - MAQUINA]: White Pawn (3, 2) --> (4, 3) eaten Black Pawn
+Move [17 - ROBO]: Black Queen (5, 3) --> (2, 0) eaten White Horse
+Move [18 - MAQUINA]: White Pawn (1, 0) --> (3, 0)
+Move [19 - ROBO]: Black Queen (2, 0) --> (0, 0) eaten White Tower
+Move [20 - MAQUINA]: White King (0, 4) --> (0, 3)
+Move [21 - ROBO]: Black Bishop (7, 2) --> (2, 7) eaten White Pawn
+Move [22 - MAQUINA]: White Pawn (1, 5) --> (3, 5)
+Move [23 - ROBO]: Black Bishop (2, 7) --> (1, 6) eaten White Pawn
+Move [24 - MAQUINA]: White Pawn (3, 5) --> (4, 5)
+Move [25 - ROBO]: Black Bishop (1, 6) --> (0, 7) eaten White Tower
+Move [26 - MAQUINA]: White King (0, 3) --> (0, 4)
+Move [27 - ROBO]: Black Queen (0, 0) --> (3, 0) eaten White Pawn
+Move [28 - MAQUINA]: White Bishop (0, 5) --> (2, 3)
+Move [29 - ROBO]: Black Bishop (0, 7) --> (2, 5) eaten White Horse
+Move [30 - MAQUINA]: White King (0, 4) --> (0, 5)
+Move [31 - ROBO]: Black Horse (0, 2) --> (2, 3) eaten White Bishop
+Move [32 - MAQUINA]: White Pawn (1, 1) --> (2, 1)
+Move [33 - ROBO]: Black Tower (7, 0) --> (7, 3)
+Move [34 - MAQUINA]: White Pawn (2, 1) --> (3, 1)
+Move [35 - ROBO]: Black Queen (3, 0) --> (3, 1) eaten White Pawn
+Move [36 - MAQUINA]: White Pawn (4, 3) --> (5, 3)
+Move [37 - ROBO]: Black Queen (3, 1) --> (3, 3)
+Move [38 - MAQUINA]: White Pawn (5, 3) --> (6, 3)
+Move [39 - ROBO]: Black Bishop (7, 5) --> (5, 3)
+Move [40 - MAQUINA]: White King (0, 5) --> (1, 5)
+Move [41 - ROBO]: Black Horse (2, 3) --> (1, 5) eaten White King
+Player 1 - ROBO: Black wins. Game finished. 
