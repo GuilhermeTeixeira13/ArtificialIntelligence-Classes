@@ -236,8 +236,8 @@ def AASTERISCO(inicial_state, height, width):
         for s in suc:
             if (s not in done) and (s not in todo):
                 # Na função f, mais pontos é mau, menos é bom
-                print(ObjectiveFunction(s, height, width)+count_steps)
-                todo.insert(ObjectiveFunction(s, height, width)+count_steps, s)
+                #print(ObjectiveFunction(s, height, width)+count_steps)
+                todo.insert(ObjectiveFunction(s, height, width) + count_steps, s)
         done.append(x)
 
     return None
@@ -246,18 +246,18 @@ def AASTERISCO(inicial_state, height, width):
 height = 3
 width = 3
 
-inicial_board = create_randomstate(height, width)
+#inicial_board = create_randomstate(height, width)
 almost_win = [1, 2, 3, 4, 5, 0, 6, 7, 8]
 
 print("Estado inicial:")
-show_state(inicial_board, height, width)
+show_state(almost_win, height, width)
 
 #tree = expand_tree([almost_win,[]], 2, height, width)
 #print("\n\nÁrvore:\n")
 #show_tree(tree, 0, height, width)
 
-show_state(BFS(inicial_board, height, width), height, width)
+show_state(BFS(almost_win, height, width), height, width)
 
-#show_state(DFS(almost_win, height, width), height, width)
+show_state(DFS(almost_win, height, width), height, width)
 
-#show_state(AASTERISCO(almost_win, height, width), height, width)
+show_state(AASTERISCO(almost_win, height, width), height, width)
