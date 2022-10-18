@@ -536,7 +536,7 @@ def decide_move(state, player):
     global board
     board = state
     win_in_next_play = False
-    depth = 3
+    depth = 1
 
     # If one of the next moves ends up in a win for me, then choose that move.
     moves = sucessor_states(board, player)
