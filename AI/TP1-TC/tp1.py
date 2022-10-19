@@ -1,7 +1,7 @@
 # The transactions will be stored in a 3D m
 def read_transactions(size):
-    cubic_3d_matrix = [[[] for _ in range(S)] for _ in range(S)]
-    for i in range(lenTransactions):
+    cubic_3d_matrix = [[[] for _ in range(size)] for _ in range(size)]
+    for i in range(size):
         transaction = list(str(input()).split(" "))
         cubic_3d_matrix[int(transaction[0]) - 1][int(transaction[2]) - 1].append(transaction[1])
     return cubic_3d_matrix
@@ -23,6 +23,8 @@ def automata_ndfa(cubic_3d_matrix):
     print("NDFA") if ndfa else print("DFA")
 
 
+
+# VERIFY IF IT IS NOT IN VISITED AS WELL
 def goal_exists_in_line(cubic_3d_matrix, line, goal):
     line_content = []
     for column in range(len(cubic_3d_matrix)):
@@ -39,9 +41,17 @@ def get_columns_of_goal(cubic_3d_matrix, line, goal, visited):
     columns_with_goals = []
     for count, column in enumerate(cubic_3d_matrix[line - 1]):
         if goal in column:
-            if [line, column, column.index(goal)] not in visited:
-                columns_with_goals.append(count)
+            if [line, count+1, column.index(goal)] not in visited:
+                columns_with_goals.append(count+1)
     return columns_with_goals
+
+
+# Not used, same thing as -> cubic_3d_matrix[line-1][current_node-1].index(goal)]
+def index_current_goal_in_cell(cubic_3d_matrix, line, column, goal):
+    for count, item in enumerate(cubic_3d_matrix[line-1][column-1]):
+        if item == goal:
+            return count
+    return -1
 
 
 def find_path(cubic_3d_matrix, word, s0):
@@ -55,9 +65,22 @@ def find_path(cubic_3d_matrix, word, s0):
 
     while True:
         line = current_node
+        # VERIFY IF IT IS NOT IN VISITED AS WELL
         if goal_exists_in_line(cubic_3d_matrix, line, current_goal):
             current_word += current_goal
             goal_columns = get_columns_of_goal(cubic_3d_matrix, line, current_node, visited)
+            current_node = goal_columns[0]
+            path_to_string.append(current_node)
+            if current_word == word:
+                break
+            else:
+                word_char_pos += 1
+                if current_goal != word[word_char_pos]:
+                    visited = []
+                    current_goal = word[word_char_pos]
+                else:
+                    visited.append([line, current_node, cubic_3d_matrix[line-1][current_node-1].index(current_goal)])
+        else:
 
 
 # Main
