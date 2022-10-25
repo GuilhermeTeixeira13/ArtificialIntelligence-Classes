@@ -2,8 +2,6 @@ import socket, sys
 
 from collections import Counter  # Added by me
 import re  # Added by me
-import numpy as np # Added by me
-import math # Added by me
 
 board = ""  # Added by me
 interactive_flag = False
@@ -409,7 +407,8 @@ def is_capture(board, move, player):
         return False
 
 
-def evaluate_board(board, player):
+def evaluate_board():
+    global board, player
 
     # Counts how many of each piece the player has
     counter = Counter(board)
@@ -466,80 +465,92 @@ def evaluate_board(board, player):
     else:
         return -eval
 
-def find_node(tr, id):
-    if len(tr) == 0:
-        return None
-    if tr[0] == id:
-        return tr
-    for t in tr[-1]:
-        aux = find_node(t, id)
-        if aux is not None:
-            return aux
-    return None
+
+#   Quiescence search, the purpose of this search is to only evaluate the positions where there are no winning
+# tactical moves to be made.
+#   This search is needed to avoid the horizon effect which is caused by the depth limitation of the search algorithm.
+def quiesce(alpha, beta):
+    global board, player
+
+    stand_pat = evaluate_board()
+    if stand_pat >= beta:
+        return beta
+    if alpha < stand_pat:
+        alpha = stand_pat
+
+    for move in sucessor_states(board, player):
+        if is_capture(board, move, player):
+            board = move
+            score = -quiesce(-beta, -alpha)
+            board = ""
+
+            if score >= beta:
+                return beta
+            if score > alpha:
+                alpha = score
+    return alpha
 
 
-def insert_state_tree(tr, nv, parent):
-    nd = find_node(tr, parent[0])
-    if nd is None:
-        return None
-    nd[-1].append(nv)
-    return tr
+#   Alpha-beta pruning for the optimization of our execution speed
+# It eliminates most of the unnecessary iterations
+def alphabeta(alpha, beta, depthleft):
+    global board, player
 
+    bestscore = -9999
+    if depthleft == 0:
+        return quiesce(alpha, beta)
+    for move in sucessor_states(board, player):
+        board = move
+        score = -alphabeta(-beta, -alpha, depthleft - 1)
+        board = ""
+        if score >= beta:
+            return score
+        if score > bestscore:
+            bestscore = score
+        if score > alpha:
+            alpha = score
 
-def expand_tree(tr, depth, player):
-    if depth == 0:
-        return tr
-    suc = sucessor_states(tr[0], player)
-    for s in suc:
-        tr = insert_state_tree(tr, expand_tree([s, 0, evaluate_board(s, player), []], depth-1, player), tr)
-    return tr
+    return bestscore
 
+# Searches for the best move in a certain depth
+def selectmove(depth):
+    global board, player
 
-def minimax_alpha_beta(tr, depth, max_player, player, alpha, beta):
-    if depth == 0 or len(tr[-1]) == 0:
-        return tr, f_obj(tr[0], player)
+    bestMove = ""
+    bestValue = -99999
+    alpha = -100000
+    beta = 100000
+    for move in sucessor_states(board, player):
+        board = move
+        boardValue = -alphabeta(-beta, -alpha, depth - 1)
+        if boardValue > bestValue:
+            bestValue = boardValue
+            bestMove = move
+        if boardValue > alpha:
+            alpha = boardValue
+        board = ""
+    return bestMove
 
-    ret = math.inf * pow(-1, max_player)
-    ret_nd = tr
-    for s in tr[-1]:
-        aux, val = minimax_alpha_beta(s, depth - 1, not max_player, alpha, beta)
-        if max_player:
-            if val > ret:
-                ret = val
-                ret_nd = aux
-            alpha = max(alpha, ret)
-        else:
-            if val < ret:
-                ret = val
-                ret_nd = aux
-            beta = min(beta, ret)
-        if beta <= alpha:
+# Given a board "state", it will calculate the best move possible for the "player"
+def decide_move(state, player):
+    global board
+    board = state
+    win_in_next_play = False
+    depth = 1
+
+    # If one of the next moves ends up in a win for me, then choose that move.
+    moves = sucessor_states(board, player)
+    for m in moves:
+        if check_win(m) == player:
+            win_in_next_play = True
+            decided_move = m
             break
 
-    return ret_nd, ret
+    # Else, search for the best move possible.
+    if not win_in_next_play:
+        decided_move = selectmove(depth)
 
-def get_next_move(tree, st):
-    fa = st
-    while fa is not None:
-        tmp = fa
-        fa = get_father(tree, fa)
-        if fa is not None:
-            st = tmp
-            # print('Father_%s_' % st[0])
-    return st
-
-
-def decide_move(state, player):
-    depth_tree = 1
-
-    initial_state = [state, 0, evaluate_board(state, player), []]
-    initial_state = expand_tree(initial_state, depth_tree, player)
-
-    choice, value = minimax_alpha_beta(initial_state, depth_tree, True, player, -math.inf, math.inf)
-
-    next_move = get_next_move(initial_state, choice)
-
-    return next_move
+    return decided_move
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      # socket initialization

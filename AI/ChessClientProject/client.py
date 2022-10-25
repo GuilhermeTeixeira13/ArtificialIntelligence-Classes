@@ -1,24 +1,206 @@
 import socket, sys
-
+import math
 from collections import Counter  # Added by me
-import re  # Added by me
+import re
 
-board = ""  # Added by me
 interactive_flag = False
+
+depth_analysis = 1
 
 
 def pos2_to_pos1(x2):
     return x2[0] * 8 + x2[1]
 
 
-# Added by me (copy from RandomPlays.py)
 def pos1_to_pos2(x):
     row = x // 8
     col = x % 8
     return [row, col]
 
+############################## What I did ##############################
 
-# Added by me (copy from RandomPlays.py)
+# Function that reverse a list
+def reverse(lst):
+    new_lst = lst[::-1]
+    return new_lst
+
+#   Square tables that will help us evaluate our board pieces and the values will
+# be set in a 8x8 matrix such as in chess such that it must have a higher
+# value at favorable positions and a lower value at a non-favorable place
+
+pawntablewhite = [
+    0, 0, 0, 0, 0, 0, 0, 0,
+    5, 10, 10, -20, -20, 10, 10, 5,
+    5, -5, -10, 0, 0, -10, -5, 5,
+    0, 0, 0, 20, 20, 0, 0, 0,
+    5, 5, 10, 25, 25, 10, 5, 5,
+    10, 10, 20, 30, 30, 20, 10, 10,
+    50, 50, 50, 50, 50, 50, 50, 50,
+    0, 0, 0, 0, 0, 0, 0, 0]
+
+pawntableblack = reverse(pawntablewhite)
+
+knighttablewhite = [
+    -50, -40, -30, -30, -30, -30, -40, -50,
+    -40, -20, 0, 5, 5, 0, -20, -40,
+    -30, 5, 10, 15, 15, 10, 5, -30,
+    -30, 0, 15, 20, 20, 15, 0, -30,
+    -30, 5, 15, 20, 20, 15, 5, -30,
+    -30, 0, 10, 15, 15, 10, 0, -30,
+    -40, -20, 0, 0, 0, 0, -20, -40,
+    -50, -40, -30, -30, -30, -30, -40, -50]
+
+knighttableblack = reverse(knighttablewhite)
+
+bishopstablewhite = [
+    -20, -10, -10, -10, -10, -10, -10, -20,
+    -10, 5, 0, 0, 0, 0, 5, -10,
+    -10, 10, 10, 10, 10, 10, 10, -10,
+    -10, 0, 10, 10, 10, 10, 0, -10,
+    -10, 5, 5, 10, 10, 5, 5, -10,
+    -10, 0, 5, 10, 10, 5, 0, -10,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -20, -10, -10, -10, -10, -10, -10, -20]
+
+bishopstableblack = reverse(bishopstablewhite)
+
+rookstablewhite = [
+    0, 0, 0, 5, 5, 0, 0, 0,
+    -5, 0, 0, 0, 0, 0, 0, -5,
+    -5, 0, 0, 0, 0, 0, 0, -5,
+    -5, 0, 0, 0, 0, 0, 0, -5,
+    -5, 0, 0, 0, 0, 0, 0, -5,
+    -5, 0, 0, 0, 0, 0, 0, -5,
+    5, 10, 10, 10, 10, 10, 10, 5,
+    0, 0, 0, 0, 0, 0, 0, 0]
+
+rookstableblack = reverse(rookstablewhite)
+
+queentablewhite = [
+    -20, -10, -10, -5, -5, -10, -10, -20,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -10, 5, 5, 5, 5, 5, 0, -10,
+    0, 0, 5, 5, 5, 5, 0, -5,
+    -5, 0, 5, 5, 5, 5, 0, -5,
+    -10, 0, 5, 5, 5, 5, 0, -10,
+    -10, 0, 0, 0, 0, 0, 0, -10,
+    -20, -10, -10, -5, -5, -10, -10, -20]
+
+queentableblack = reverse(queentablewhite)
+
+kingtablewhite = [
+    20, 30, 10, 0, 0, 10, 30, 20,
+    20, 20, 0, 0, 0, 0, 20, 20,
+    -10, -20, -20, -20, -20, -20, -20, -10,
+    -20, -30, -30, -40, -40, -30, -30, -20,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30,
+    -30, -40, -40, -50, -50, -40, -40, -30]
+
+kingtableblack = reverse(kingtablewhite)
+
+kingtablewhiteEND = [
+    -50, -30, -30, -30, -30, -30, -30, -50,
+    -30, -30, 0, 0, 0, 0, -30, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 30, 40, 40, 30, -10, -30,
+    -30, -10, 20, 30, 30, 20, -10, -30,
+    -30, -20, -10, 0, 0, -10, -20, -30,
+    -50, -40, -30, -20, -20, -30, -40, -50]
+
+kingtableblackEND = reverse(kingtablewhiteEND)
+
+
+# Build a list with the positions of the given "pieces" on the "board"
+def positions_of_pieces(pieces, board):
+    result = []
+    lst = list(pieces)
+    for piece in lst:
+        for pos in re.finditer(piece, board):
+            result.append(pos.start())
+    result.sort()
+    return result
+
+
+def f_obj(board, play):
+    if player == 0:
+        if board.find("e") < 0:
+            return -math.inf
+        if board.find("E") < 0:
+            return math.inf
+    if player == 1:
+        if board.find("E") < 0:
+            return -math.inf
+        if board.find("e") < 0:
+            return math.inf
+
+    # Counts how many of each piece the player has
+    bp = sum(map(board.count, ['I','J', 'K', 'L', 'M', 'N', 'O', 'P']))
+    wp = sum(map(board.count, ['i','j', 'k', 'l', 'm', 'n', 'o', 'p']))
+    bk = sum(map(board.count, ['B','G']))
+    wk = sum(map(board.count, ['b','g']))
+    bb = sum(map(board.count, ['C','F']))
+    wb = sum(map(board.count, ['c','f']))
+    br = sum(map(board.count, ['A','H']))
+    wr = sum(map(board.count, ['a','h']))
+    bq = sum(map(board.count, ['D']))
+    wq = sum(map(board.count, ['d']))
+
+    #   The material score is calculated by the summation of all respective piece’s weights multiplied
+    # by the difference between the number of that respective piece between white and black.
+    material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+
+    #   The individual pieces score is the sum of piece-square values of positions where the respective
+    # piece is present at that instance of the game.
+
+    pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("ijklmnop", board)])
+    pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
+
+    knightsq = sum([knighttablewhite[pos] for pos in positions_of_pieces("bg", board)])
+    knightsq = knightsq + sum([-knighttableblack[pos] for pos in positions_of_pieces("BG", board)])
+
+    bishopsq = sum([bishopstablewhite[pos] for pos in positions_of_pieces("cf", board)])
+    bishopsq = bishopsq + sum([-bishopstableblack[pos] for pos in positions_of_pieces("CF", board)])
+
+    rooksq = sum([rookstablewhite[pos] for pos in positions_of_pieces("ah", board)])
+    rooksq = rooksq + sum([-rookstableblack[pos] for pos in positions_of_pieces("AH", board)])
+
+    queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("d", board)])
+    queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("D", board)])
+
+    if wp + (wk * 3) + (wb * 3) + (wr * 5) + (wq * 9) <= 13 and bp + (bk * 3) + (bb * 3) + (br * 5) + (bq * 9) <= 13:
+        kingsq = sum([kingtablewhiteEND[pos] for pos in positions_of_pieces("e", board)])
+        kingsq = kingsq + sum([-kingtableblackEND[pos] for pos in positions_of_pieces("E", board)])
+    else:
+        kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("e", board)])
+        kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("E", board)])
+
+    #   It will return the summation of the material scores and the individual scores for white and when
+    # it comes for black, let’s negate it.
+
+    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+
+    if play == 0:
+        return eval
+    else:
+        return -eval
+
+############################################################
+
+def find_node(tr, id):
+    if len(tr) == 0:
+        return None
+    if tr[0] == id:
+        return tr
+    for t in tr[-1]:
+        aux = find_node(t, id)
+        if aux is not None:
+            return aux
+    return None
+
+
 def get_positions_directions(state, piece, p2, directions):
     ret = []
     for d in directions:
@@ -33,6 +215,7 @@ def get_positions_directions(state, piece, p2, directions):
                 if abs(ord(state[pos2_to_pos1([p2[0] - r, p2[1]])]) - ord(piece)) > 16:
                     ret.append([p2[0] - r, p2[1]])
                 break
+
             if d[0] == 'S':
                 if p2[0] + r > 7:
                     break
@@ -180,7 +363,15 @@ def get_positions_directions(state, piece, p2, directions):
     return ret
 
 
-# Added by me (copy from RandomPlays.py)
+def count_nodes(tr):
+    ret = 0
+    if len(tr) > 0:
+        for t in tr[-1]:
+            ret += count_nodes(t)
+        return (1 + ret)
+    return ret
+
+
 def get_available_positions(state, p2, piece):
     ret = []
     if piece in ('a', 'h', 'A', 'H'):  # Tower
@@ -247,9 +438,10 @@ def get_available_positions(state, p2, piece):
     return ret
 
 
-# Added by me (copy from RandomPlays.py)
 def sucessor_states(state, player):
     ret = []
+
+    # print('Player=%d' % player)
 
     for x in range(ord('a') - player * 32, ord('p') - player * 32 + 1):
 
@@ -275,292 +467,272 @@ def sucessor_states(state, player):
     return ret
 
 
-# Added by me (copy from RandomPlays.py)
-def check_win(cur_state):
-    # If the black king is not on the boar, then the white player wins
-    if cur_state.find('e') < 0:
-        return 1
-    # Vice versa
-    if cur_state.find('E') < 0:
-        return 0
-    return 2
+def insert_state_tree(tr, nv, parent):
+    nd = find_node(tr, parent[0])
+    if nd is None:
+        return None
+    nd[-1].append(nv)
+    return tr
 
 
-# Function that reverse a list
-def reverse(lst):
-    new_lst = lst[::-1]
-    return new_lst
+# #####################################################################################################################
+# PRINT Board
+
+pieces = ''.join(chr(9812 + x) for x in range(12))
+pieces = u' ' + pieces[:6][::-1] + pieces[6:]
+allbox = ''.join(chr(9472 + x) for x in range(200))
+box = [allbox[i] for i in (2, 0, 12, 16, 20, 24, 44, 52, 28, 36, 60)]
+(vbar, hbar, ul, ur, ll, lr, nt, st, wt, et, plus) = box
+
+h3 = hbar * 3
+
+# useful constant unicode strings to draw the square borders
+
+topline = ul + (h3 + nt) * 7 + h3 + ur
+midline = wt + (h3 + plus) * 7 + h3 + et
+botline = ll + (h3 + st) * 7 + h3 + lr
+
+tpl = u' {0} ' + vbar
 
 
-#   Square tables that will help us evaluate our board pieces and the values will
-# be set in a 8x8 matrix such as in chess such that it must have a higher
-# value at favorable positions and a lower value at a non-favorable place
+def inter(*args):
+    """Return a unicode string with a line of the chessboard.
 
-pawntablewhite = [
-    0, 0, 0, 0, 0, 0, 0, 0,
-    50, 50, 50, 50, 50, 50, 50, 50,
-    10, 10, 20, 30, 30, 20, 10, 10,
-    5, 5, 10, 27, 27, 10, 5, 5,
-    0, 0, 0, 25, 25, 0, 0, 0,
-    5, -5, -10, 0, 0, -10, -5, 5,
-    5, 10, 10, -25, -25, 10, 10, 5,
-    0, 0, 0, 0, 0, 0, 0, 0]
-
-pawntableblack = reverse(pawntablewhite)
-
-knighttablewhite = [
-    -50, -40, -30, -30, -30, -30, -40, -50,
-    -40, -20, 0, 0, 0, 0, -20, -40,
-    -30, 0, 10, 15, 15, 10, 0, -30,
-    -30, 5, 15, 20, 20, 15, 5, -30,
-    -30, 0, 15, 20, 20, 15, 0, -30,
-    -30, 5, 10, 15, 15, 10, 5, -30,
-    -40, -20, 0, 5, 5, 0, -20, -40,
-    -50, -40, -20, -30, -30, -20, -40, -50]
-
-knighttableblack = reverse(knighttablewhite)
-
-bishopstablewhite = [
-    -20, -10, -10, -10, -10, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 10, 10, 5, 0, -10,
-    -10, 5, 5, 10, 10, 5, 5, -10,
-    -10, 0, 10, 10, 10, 10, 0, -10,
-    -10, 10, 10, 10, 10, 10, 10, -10,
-    -10, 5, 0, 0, 0, 0, 5, -10,
-    -20, -10, -40, -10, -10, -40, -10, -20]
-
-bishopstableblack = reverse(bishopstablewhite)
-
-rookstablewhite = [
-    -20, -10, -10, -10, -10, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 10, 10, 5, 0, -10,
-    -10, 5, 5, 10, 10, 5, 5, -10,
-    -10, 0, 10, 10, 10, 10, 0, -10,
-    -10, 10, 10, 10, 10, 10, 10, -10,
-    -10, 5, 0, 0, 0, 0, 5, -10,
-    -20, -10, -10, -10, -10, -10, -10, -20]
-
-rookstableblack = reverse(rookstablewhite)
-
-queentablewhite = [
-    -20, -10, -10, -5, -5, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 0, 5, 5, 5, 5, 0, -10,
-    -5, 0, 5, 5, 5, 5, 0, -5,
-    0, 0, 5, 5, 5, 5, 0, -5,
-    -10, 5, 5, 5, 5, 5, 0, -10,
-    -10, 0, 5, 0, 0, 0, 0, -10,
-    -20, -10, -10, -5, -5, -10, -10, -20]
-
-queentableblack = reverse(queentablewhite)
-
-kingtablewhite = [
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -20, -30, -30, -40, -40, -30, -30, -20,
-    -10, -20, -20, -20, -20, -20, -20, -10,
-    20, 20, 0, 0, 0, 0, 20, 20,
-    20, 30, 10, 0, 0, 10, 30, 20]
-
-kingtableblack = reverse(kingtablewhite)
-
-kingtablewhiteEND = [
-    -50, -40, -30, -20, -20, -30, -40, -50,
-    -30, -20, -10, 0, 0, -10, -20, -30,
-    -30, -10, 20, 30, 30, 20, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 20, 30, 30, 20, -10, -30,
-    -30, -30, 0, 0, 0, 0, -30, -30,
-    -50, -30, -30, -30, -30, -30, -30, -50]
-
-kingtableblackEND = reverse(kingtablewhiteEND)
+    args are 8 integers with the values
+        0 : empty square
+        1, 2, 3, 4, 5, 6: white pawn, knight, bishop, rook, queen, king
+        -1, -2, -3, -4, -5, -6: same black pieces
+    """
+    assert len(args) == 8
+    return vbar + u''.join((tpl.format(pieces[a]) for a in args))
 
 
-# Build a list with the positions of the given "pieces" on the "board"
-def positions_of_pieces(pieces, board):
-    result = []
-    lst = list(pieces)
-    for piece in lst:
-        for pos in re.finditer(piece, board):
-            result.append(pos.start())
-    result.sort()
-    return result
+print
+pieces
+print
+' '.join(box)
+print
+
+start_position = (
+        [
+            (-4, -2, -3, -5, -6, -3, -2, -4),
+            (-1,) * 8,
+        ] +
+        [(0,) * 8] * 4 +
+        [
+            (1,) * 8,
+            (4, 2, 3, 5, 6, 3, 2, 4),
+        ]
+)
 
 
-# Analyses 2 states of the board ("board" and "move") and checks if the "player" made a capture
-def is_capture(board, move, player):
-    if player == 0:
-        oppontent_pieces_before = positions_of_pieces("abcdefghijklmnop", board)
-        oppontent_pieces_after = positions_of_pieces("abcdefghijklmnop", move)
+def _game(position):
+    yield topline
+    yield inter(*position[0])
+    for row in position[1:]:
+        yield midline
+        yield inter(*row)
+    yield botline
+
+
+game = lambda squares: "\n".join(_game(squares))
+game.__doc__ = "Return the chessboard as a string for a given position."
+
+
+# #####################################################################################################################
+
+
+def get_description_piece(piece):
+    if ord(piece) < 97:
+        ret = 'Black '
     else:
-        oppontent_pieces_before = positions_of_pieces("IJKLMNOPABCDEFGH", board)
-        oppontent_pieces_after = positions_of_pieces("IJKLMNOPABCDEFGH", move)
-
-    if oppontent_pieces_after < oppontent_pieces_before:
-        return True
+        ret = 'White '
+    if piece.lower() in ('a', 'h'):
+        ret = ret + 'Tower'
+    elif piece.lower() in ('b', 'g'):
+        ret = ret + 'Horse'
+    elif piece.lower() in ('c', 'f'):
+        ret = ret + 'Bishop'
+    elif piece.lower() == 'd':
+        ret = ret + 'Queen'
+    elif piece.lower() == 'e':
+        ret = ret + 'King'
     else:
-        return False
+        ret = ret + 'Pawn'
+    return ret
 
 
-def evaluate_board():
-    global board, player
+def description_move(prev, cur, idx, nick):
+    # print('description_move()')
+    ret = 'Move [%d - %s]: ' % (idx, nick)
 
-    # Counts how many of each piece the player has
-    counter = Counter(board)
-    wp = counter["I"] + counter["J"] + counter["K"] + counter["L"] + counter["M"] + counter["N"] + counter["O"] + \
-         counter["P"]
-    bp = counter["i"] + counter["j"] + counter["k"] + counter["l"] + counter["m"] + counter["n"] + counter["o"] + \
-         counter["p"]
-    wk = counter["B"] + counter["G"]
-    bk = counter["b"] + counter["g"]
-    wb = counter["C"] + counter["F"]
-    bb = counter["c"] + counter["f"]
-    wr = counter["A"] + counter["H"]
-    br = counter["a"] + counter["h"]
-    wq = counter["D"]
-    bq = counter["d"]
+    cur_blank = [i for i, ltr in enumerate(cur) if ltr == 'z']
+    prev_not_blank = [i for i, ltr in enumerate(prev) if ltr != 'z']
+    # print(cur_blank)
+    # print(prev_not_blank)
+    moved = list(set(cur_blank) & set(prev_not_blank))
+    # print(moved)
+    moved = moved[0]
 
-    #   The material score is calculated by the summation of all respective piece’s weights multiplied
-    # by the difference between the number of that respective piece between white and black.
-    material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+    desc_piece = get_description_piece(prev[moved])
 
-    #   The individual pieces score is the sum of piece-square values of positions where the respective
-    # piece is present at that instance of the game.
+    fr = pos1_to_pos2(moved)
+    to = pos1_to_pos2(cur.find(prev[moved]))
+    # print(fr)
+    # print(to)
 
-    pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
-    pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("ijklmnop", board)])
-
-    knightsq = sum([knighttablewhite[pos] for pos in positions_of_pieces("BG", board)])
-    knightsq = knightsq + sum([-knighttableblack[pos] for pos in positions_of_pieces("bg", board)])
-
-    bishopsq = sum([bishopstablewhite[pos] for pos in positions_of_pieces("CF", board)])
-    bishopsq = bishopsq + sum([-bishopstableblack[pos] for pos in positions_of_pieces("cf", board)])
-
-    rooksq = sum([rookstablewhite[pos] for pos in positions_of_pieces("AH", board)])
-    rooksq = rooksq + sum([-rookstableblack[pos] for pos in positions_of_pieces("aH", board)])
-
-    queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("D", board)])
-    queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("d", board)])
-
-    # In case of end game, we use a different piece-square table for the king (else case):
-    if wp + (wk * 3) + (wb * 3) + (wr * 5) + (wq * 9) <= 13 and bp + (bk * 3) + (bb * 3) + (br * 5) + (bq * 9) <= 13:
-        kingsq = sum([kingtablewhiteEND[pos] for pos in positions_of_pieces("E", board)])
-        kingsq = kingsq + sum([-kingtableblackEND[pos] for pos in positions_of_pieces("e", board)])
-    else:
-        kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("E", board)])
-        kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("e", board)])
-
-    #   It will return the summation of the material scores and the individual scores for white and when
-    # it comes for black, let’s negate it.
-
-    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
-
-    if player == 0:
-        return eval
-    else:
-        return -eval
+    ret = ret + desc_piece + ' (%d, %d) --> (%d, %d)' % (fr[0], fr[1], to[0], to[1])
+    if prev[pos2_to_pos1(to)] != 'z':
+        desc_piece = get_description_piece(prev[pos2_to_pos1(to)])
+        ret = ret + ' eaten ' + desc_piece
+    return ret
 
 
-#   Quiescence search, the purpose of this search is to only evaluate the positions where there are no winning
-# tactical moves to be made.
-#   This search is needed to avoid the horizon effect which is caused by the depth limitation of the search algorithm.
-def quiesce(alpha, beta):
-    global board, player
+def show_board(prev, cur, idx):
+    print('print_board(obj: %f)...' % idx)
+    state_show = []
+    for r in range(0, 8):
+        row = []
+        for c in range(0, 8):
+            if cur[pos2_to_pos1([r, c])] == 'z':
+                row.append(0)
 
-    stand_pat = evaluate_board()
-    if stand_pat >= beta:
-        return beta
-    if alpha < stand_pat:
-        alpha = stand_pat
+            if cur[pos2_to_pos1([r, c])] == 'a':
+                row.append(-4)
+            if cur[pos2_to_pos1([r, c])] == 'b':
+                row.append(-2)
+            if cur[pos2_to_pos1([r, c])] == 'c':
+                row.append(-3)
+            if cur[pos2_to_pos1([r, c])] == 'd':
+                row.append(-5)
+            if cur[pos2_to_pos1([r, c])] == 'e':
+                row.append(-6)
+            if cur[pos2_to_pos1([r, c])] == 'f':
+                row.append(-3)
+            if cur[pos2_to_pos1([r, c])] == 'g':
+                row.append(-2)
+            if cur[pos2_to_pos1([r, c])] == 'h':
+                row.append(-4)
+            if ord('i') <= ord(cur[pos2_to_pos1([r, c])]) <= ord('p'):
+                row.append(-1)
 
-    for move in sucessor_states(board, player):
-        if is_capture(board, move, player):
-            board = move
-            score = -quiesce(-beta, -alpha)
-            board = ""
+            if cur[pos2_to_pos1([r, c])] == 'A':
+                row.append(4)
+            if cur[pos2_to_pos1([r, c])] == 'B':
+                row.append(2)
+            if cur[pos2_to_pos1([r, c])] == 'C':
+                row.append(3)
+            if cur[pos2_to_pos1([r, c])] == 'D':
+                row.append(5)
+            if cur[pos2_to_pos1([r, c])] == 'E':
+                row.append(6)
+            if cur[pos2_to_pos1([r, c])] == 'F':
+                row.append(3)
+            if cur[pos2_to_pos1([r, c])] == 'G':
+                row.append(2)
+            if cur[pos2_to_pos1([r, c])] == 'H':
+                row.append(4)
+            if ord('I') <= ord(cur[pos2_to_pos1([r, c])]) <= ord('P'):
+                row.append(1)
+        state_show.append(tuple(row))
 
-            if score >= beta:
-                return beta
-            if score > alpha:
-                alpha = score
-    return alpha
+    ret = game(state_show) + '\n'
+
+    if prev is None:
+        return ret
+    ret = ret + description_move(prev, cur, idx, nick)
+
+    return ret
 
 
-#   Alpha-beta pruning for the optimization of our execution speed
-# It eliminates most of the unnecessary iterations
-def alphabeta(alpha, beta, depthleft):
-    global board, player
+def expand_tree(tr, n, play):
+    if n == 0:
+        return tr
+    suc = sucessor_states(tr[0], play)
+    for s in suc:
+        tr = insert_state_tree(tr, expand_tree([s, 0, f_obj(s, play), []], n - 1, play), tr)
+    return tr
 
-    bestscore = -9999
-    if depthleft == 0:
-        return quiesce(alpha, beta)
-    for move in sucessor_states(board, player):
-        board = move
-        score = -alphabeta(-beta, -alpha, depthleft - 1)
-        board = ""
-        if score >= beta:
-            return score
-        if score > bestscore:
-            bestscore = score
-        if score > alpha:
-            alpha = score
 
-    return bestscore
+def show_tree(tr, play):
+    if len(tr) == 0:
+        return
+    print('%s' % show_board(None, tr[0], f_obj(tr[0], play)))
+    for t in tr[-1]:
+        show_tree(t, play)
 
-# Searches for the best move in a certain depth
-def selectmove(depth):
-    global board, player
 
-    bestMove = ""
-    bestValue = -99999
-    alpha = -100000
-    beta = 100000
-    for move in sucessor_states(board, player):
-        board = move
-        boardValue = -alphabeta(-beta, -alpha, depth - 1)
-        if boardValue > bestValue:
-            bestValue = boardValue
-            bestMove = move
-        if boardValue > alpha:
-            alpha = boardValue
-        board = ""
-    return bestMove
+def get_father(tr, st):
+    if len(tr) == 0:
+        return None
+    for sun in tr[-1]:
+        if sun[0] == st[0]:
+            return tr
 
-# Given a board "state", it will calculate the best move possible for the "player"
-def decide_move(state, player):
-    global board
-    board = state
-    win_in_next_play = False
-    depth = 1
+    for sun in tr[-1]:
+        aux = get_father(sun, st)
+        if aux is not None:
+            return aux
 
-    # If one of the next moves ends up in a win for me, then choose that move.
-    moves = sucessor_states(board, player)
-    for m in moves:
-        if check_win(m) == player:
-            win_in_next_play = True
-            decided_move = m
+    return None
+
+
+def get_next_move(tree, st):
+    fa = st
+    while fa is not None:
+        tmp = fa
+        fa = get_father(tree, fa)
+        if fa is not None:
+            st = tmp
+            # print('Father_%s_' % st[0])
+    return st
+
+
+def decide_move(board, play):
+    states = expand_tree([board, 0, f_obj(board, play), []], depth_analysis, play)
+
+    # show_tree(states, play)
+    print('Total nodes in the tree: %d' % count_nodes(states))
+
+    choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
+
+    next_move = get_next_move(states, choice)
+
+    return next_move[0]
+
+
+def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
+    if d == 0 or len(tr[-1]) == 0:
+        return tr, f_obj(tr[0], play)
+
+    ret = math.inf * pow(-1, max_player)
+    ret_nd = tr
+    for s in tr[-1]:
+        aux, val = minimax_alpha_beta(s, d - 1, play, not max_player, alpha, beta)
+        if max_player:
+            if val > ret:
+                ret = val
+                ret_nd = aux
+            alpha = max(alpha, ret)
+        else:
+            if val < ret:
+                ret = val
+                ret_nd = aux
+            beta = min(beta, ret)
+        if beta <= alpha:
             break
 
-    # Else, search for the best move possible.
-    if not win_in_next_play:
-        decided_move = selectmove(depth)
-
-    return decided_move
+    return ret_nd, ret
 
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      # socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))                 # connecting client to server
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
+client.connect((sys.argv[1], int(sys.argv[2])))  # connecting client to server
 
 client.send(sys.argv[3].encode('ascii'))
 
 player = int(sys.argv[4])
 
-while True:                                                     # making valid connection
+while True:  # making valid connection
     while True:
         message = client.recv(1024).decode('ascii')
         if len(message) > 0:
