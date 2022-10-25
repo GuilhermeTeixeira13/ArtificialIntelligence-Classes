@@ -2,8 +2,70 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdd09ebb-c742-4ec4-8ed2-316757fd43e1" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/AI/ChessClientProject/antagonism.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/AI/ChessClientProject/bitsmart.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/AI/TP1-TC/tp1.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/TP1-TC/tp1.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/Gui_RandomMaquina_2022_09_24_02_19_43_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_09_26_08_22_33_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_09_26_16_19_34_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_09_26_16_21_53_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_09_27_08_47_10_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_09_28_08_34_29_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_10_09_15_22_30_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_10_09_15_23_27_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_10_09_15_24_44_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/MAQUINA_ROBO_2022_10_09_15_25_45_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_26_17_10_04_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_27_08_14_38_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_27_08_45_38_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_28_08_35_25_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_28_08_35_58_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_28_08_37_11_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_29_08_43_42_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_29_08_46_58_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/ROBO_MAQUINA_2022_09_29_08_47_48_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/RandomMaquina_Gui_2022_09_24_02_27_14_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/RandomMaquina_Gui_2022_10_03_12_13_23_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/RandomMaquina_Gui_2022_10_03_12_13_49_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/RandomMaquina_Gui_2022_10_03_12_14_24_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/ChessClientProject/server.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_14_22_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_17_12_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_19_42_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_22_08_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_24_48_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_26_36_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_29_33_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_30_56_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_33_14_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/HUGO_PEDRO_2022_09_20_10_35_15_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_22_34_58_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_23_04_20_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/MAQUINA_ROBO_2022_09_25_23_29_43_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_27_01_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_43_57_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_51_32_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_18_58_30_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_02_05_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_03_55_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_18_12_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_19_27_47_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_12_22_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_20_17_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_24_13_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_37_13_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_42_44_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_20_58_21_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_03_05_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_03_44_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_25_16_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_39_10_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_21_52_51_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_22_04_06_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/ROBO_MAQUINA_2022_09_25_22_19_07_log.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/client.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/ChessClientProject/client2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/randomPlays.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/AI/Project/server.py" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -28,20 +90,23 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/guite/OneDrive/Área de Trabalho/ArtificialIntelligence-UBI&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "C:/Users/guite/OneDrive/Área de Trabalho/ArtificialIntelligence-UBI/AI/ChessClientProject",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
+    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\Week1" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.tp1">
+  <component name="RunManager" selected="Python.client2">
     <configuration name="InterpreterPython" type="PythonConfigurationType" factoryName="Python">
       <module name="ArtificialIntelligence-UBI" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -63,7 +128,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="jogoTab" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+    <configuration name="client2" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ArtificialIntelligence-UBI" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -71,11 +136,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="C:\Users\guite\AppData\Local\Microsoft\WindowsApps\python3.9.exe" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AI/Week2" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AI/ChessClientProject" />
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\AI\Week2\jogoTab.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/AI/ChessClientProject/client2.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -170,19 +235,19 @@
     </configuration>
     <list>
       <item itemvalue="Python.InterpreterPython" />
-      <item itemvalue="Python.tp1" />
-      <item itemvalue="Python.queens" />
-      <item itemvalue="Python.jogoTab" />
-      <item itemvalue="Python.trees" />
+      <item itemvalue="Python.client2" />
       <item itemvalue="Python.jogoTabSol" />
+      <item itemvalue="Python.queens" />
+      <item itemvalue="Python.tp1" />
+      <item itemvalue="Python.trees" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.client2" />
         <item itemvalue="Python.tp1" />
         <item itemvalue="Python.queens" />
         <item itemvalue="Python.jogoTabSol" />
         <item itemvalue="Python.trees" />
-        <item itemvalue="Python.jogoTab" />
       </list>
     </recent_temporary>
   </component>
