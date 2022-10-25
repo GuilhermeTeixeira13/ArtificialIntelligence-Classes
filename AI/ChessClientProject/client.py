@@ -690,12 +690,8 @@ def get_next_move(tree, st):
 
 def decide_move(board, play):
     states = expand_tree([board, 0, f_obj(board, play), []], depth_analysis, play)
-
-    # show_tree(states, play)
     print('Total nodes in the tree: %d' % count_nodes(states))
-
     choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
-
     next_move = get_next_move(states, choice)
 
     return next_move[0]
