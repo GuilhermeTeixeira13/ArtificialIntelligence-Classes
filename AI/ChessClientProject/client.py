@@ -125,6 +125,11 @@ def positions_of_pieces(pieces, board):
 
 
 def f_obj(board, play):
+    # If the player white = 0 is playing and he lost his king, then he loses
+    # If the player white = 0 is playing and he eats the black king, then he wins
+
+    # The opposite for the black = 1 player
+
     if player == 0:
         if board.find("e") < 0:
             return -math.inf
