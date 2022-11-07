@@ -133,7 +133,6 @@ def f_obj(board, play):
 
     if player == 0:
         if board.find("e") < 0:
-            print("branco sob check")
             return -math.inf
         if board.find("E") < 0:
             return math.inf
@@ -185,6 +184,7 @@ def f_obj(board, play):
         kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("e", board)])
         kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("E", board)])
 
+
     # Mobility
 
     count_white_mob = 0
@@ -212,6 +212,7 @@ def f_obj(board, play):
         return -eval
 
 ############################################################
+
 
 def find_node(tr, id):
     if len(tr) == 0:
