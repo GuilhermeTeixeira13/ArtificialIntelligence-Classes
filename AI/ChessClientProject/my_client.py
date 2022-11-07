@@ -1,11 +1,11 @@
 import socket, sys
 import math
-from collections import Counter  # Added by me
+import random
 import re
 
 interactive_flag = False
 
-depth_analysis = 1
+depth_analysis = 3
 
 
 def pos2_to_pos1(x2):
@@ -16,6 +16,7 @@ def pos1_to_pos2(x):
     row = x // 8
     col = x % 8
     return [row, col]
+
 
 ############################## What I did ##############################
 
@@ -132,11 +133,13 @@ def f_obj(board, play):
 
     if player == 0:
         if board.find("e") < 0:
+            print("branco sob check")
             return -math.inf
         if board.find("E") < 0:
             return math.inf
     if player == 1:
         if board.find("E") < 0:
+            print("preto sob check")
             return -math.inf
         if board.find("e") < 0:
             return math.inf
@@ -182,10 +185,26 @@ def f_obj(board, play):
         kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("e", board)])
         kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("E", board)])
 
-    #   It will return the summation of the material scores and the individual scores for white and when
+    # Mobility
+
+    count_white_mob = 0
+    count_black_mob = 0
+    for piece in ["a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"]:
+        positions_white = positions_of_pieces(piece, board)
+        positions_black = positions_of_pieces(piece.upper(), board)
+        for pos in positions_white:
+            available_pos = get_available_positions(board, pos1_to_pos2(pos), piece)
+            count_white_mob += len(available_pos)
+        for pos in positions_black:
+            available_pos = get_available_positions(board, pos1_to_pos2(pos), piece.upper())
+            count_black_mob += len(available_pos)
+
+    mob = count_white_mob - count_black_mob
+
+    #   It will return the summation of the material scores and the individual scores and mobility for white and when
     # it comes for black, let’s negate it.
 
-    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq
+    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq + mob
 
     if play == 0:
         return eval
@@ -296,31 +315,33 @@ def get_positions_directions(state, piece, p2, directions):
                     break
                 if state[pos2_to_pos1([p2[0] + r, p2[1]])] == 'z':
                     ret.append([p2[0] + r, p2[1]])
-                continue
+                    continue
+                break
             if d[0] == 'PN':
                 if p2[0] - r < 0:
                     break
                 if state[pos2_to_pos1([p2[0] - r, p2[1]])] == 'z':
                     ret.append([p2[0] - r, p2[1]])
-                continue
+                    continue
+                break
             if d[0] == 'PS2':
-                if p2[0] + r <= 7 or p2[1] + 1 <= 7:
+                if p2[0] + r <= 7 and p2[1] + 1 <= 7:
                     if state[pos2_to_pos1([p2[0] + r, p2[1] + 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] + r, p2[1] + 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] + r, p2[1] + 1])
 
-                if p2[0] + r <= 7 or p2[1] - 1 >= 0:
+                if p2[0] + r <= 7 and p2[1] - 1 >= 0:
                     if state[pos2_to_pos1([p2[0] + r, p2[1] - 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] + r, p2[1] - 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] + r, p2[1] - 1])
                 continue
             if d[0] == 'PN2':
-                if p2[0] - r >= 0 or p2[1] + 1 <= 7:
+                if p2[0] - r >= 0 and p2[1] + 1 <= 7:
                     if state[pos2_to_pos1([p2[0] - r, p2[1] + 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] - r, p2[1] + 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] - r, p2[1] + 1])
 
-                if p2[0] - r >= 0 or p2[1] - 1 >= 0:
+                if p2[0] - r >= 0 and p2[1] - 1 >= 0:
                     if state[pos2_to_pos1([p2[0] - r, p2[1] - 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] - r, p2[1] - 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] - r, p2[1] - 1])
@@ -593,7 +614,7 @@ def description_move(prev, cur, idx, nick):
     return ret
 
 
-def show_board(prev, cur, idx):
+def show_board(prev, cur, idx, nick):
     print('print_board(obj: %f)...' % idx)
     state_show = []
     for r in range(0, 8):
@@ -650,28 +671,30 @@ def show_board(prev, cur, idx):
     return ret
 
 
-def expand_tree(tr, n, play):
+def expand_tree(tr, dep, n, play):
     if n == 0:
         return tr
     suc = sucessor_states(tr[0], play)
     for s in suc:
-        tr = insert_state_tree(tr, expand_tree([s, 0, f_obj(s, play), []], n - 1, play), tr)
+        tr = insert_state_tree(tr, expand_tree([s, random.random(), dep + 1, 0, f_obj(s, play), []], dep + 1, n - 1,
+                                               1 - play), tr)
     return tr
 
 
-def show_tree(tr, play):
+def show_tree(tr, play, nick, depth):
     if len(tr) == 0:
         return
-    print('%s' % show_board(None, tr[0], f_obj(tr[0], play)))
+    print('DEPTH %d' % depth)
+    print('%s' % show_board(None, tr[0], f_obj(tr[0], play), nick))
     for t in tr[-1]:
-        show_tree(t, play)
+        show_tree(t, play, nick, depth + 1)
 
 
 def get_father(tr, st):
     if len(tr) == 0:
         return None
     for sun in tr[-1]:
-        if sun[0] == st[0]:
+        if sun[1] == st[1]:
             return tr
 
     for sun in tr[-1]:
@@ -683,23 +706,11 @@ def get_father(tr, st):
 
 
 def get_next_move(tree, st):
-    fa = st
-    while fa is not None:
-        tmp = fa
-        fa = get_father(tree, fa)
-        if fa is not None:
-            st = tmp
-            # print('Father_%s_' % st[0])
-    return st
-
-
-def decide_move(board, play):
-    states = expand_tree([board, 0, f_obj(board, play), []], depth_analysis, play)
-    print('Total nodes in the tree: %d' % count_nodes(states))
-    choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
-    next_move = get_next_move(states, choice)
-
-    return next_move[0]
+    old = None
+    while get_father(tree, st) is not None:
+        old = st
+        st = get_father(tree, st)
+    return old
 
 
 def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
@@ -726,10 +737,33 @@ def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
     return ret_nd, ret
 
 
+def decide_move(board, play, nick):
+    states = expand_tree([board, random.random(), 0, f_obj(board, play), []], 0, depth_analysis,
+                         play)  # [board, hash, depth, g(), f_obj(), [SUNS]]
+
+    # show_tree(states, play, nick, 0)
+    print('Total nodes in the tree: %d' % count_nodes(states))
+
+    choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
+
+    # print('Choose f()=%f' % value)
+    # print('State_%s_' % choice[0])
+
+    next_move = get_next_move(states, choice)
+
+    # print('Next_%s_' % next_move[0])
+    # input('Trash')
+
+    return next_move[0]
+
+
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
 client.connect((sys.argv[1], int(sys.argv[2])))  # connecting client to server
 
-client.send(sys.argv[3].encode('ascii'))
+hello_msg = '%s_%s' % (sys.argv[4], sys.argv[3])
+client.send(hello_msg.encode('ascii'))
+
+nickname = sys.argv[3]
 
 player = int(sys.argv[4])
 
@@ -755,6 +789,6 @@ while True:  # making valid connection
             message[p_to] = aux
             message = ''.join(message)
     else:
-        message = decide_move(message, player)
+        message = decide_move(message, player, nickname)
 
     client.send(message.encode('ascii'))
