@@ -3,7 +3,7 @@ import os, sys
 import time
 from datetime import datetime
 
-time_out = 1000000
+time_out = 15
 
 moves_without_eat_to_draw = 9999
 

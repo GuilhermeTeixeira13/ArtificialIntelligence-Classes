@@ -2,6 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdd09ebb-c742-4ec4-8ed2-316757fd43e1" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/AI/ChessClientProject/my_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/AI/ChessClientProject/my_client.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -40,6 +41,7 @@
       <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
       <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\Week1" />
     </key>
   </component>

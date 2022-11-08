@@ -1,12 +1,12 @@
+from gettext import find
 import socket, sys
 import math
 import random
-import re
+
 
 interactive_flag = False
 
 depth_analysis = 2
-
 
 def pos2_to_pos1(x2):
     return x2[0] * 8 + x2[1]
@@ -18,199 +18,106 @@ def pos1_to_pos2(x):
     return [row, col]
 
 
-############################## What I did ##############################
-
-# Function that reverse a list
-def reverse(lst):
-    new_lst = lst[::-1]
-    return new_lst
-
-#   Square tables that will help us evaluate our board pieces and the values will
-# be set in a 8x8 matrix such as in chess such that it must have a higher
-# value at favorable positions and a lower value at a non-favorable place
-
-pawntablewhite = [
-    0, 0, 0, 0, 0, 0, 0, 0,
-    5, 10, 10, -20, -20, 10, 10, 5,
-    5, -5, -10, 0, 0, -10, -5, 5,
-    0, 0, 0, 20, 20, 0, 0, 0,
-    5, 5, 10, 25, 25, 10, 5, 5,
-    10, 10, 20, 30, 30, 20, 10, 10,
-    50, 50, 50, 50, 50, 50, 50, 50,
-    0, 0, 0, 0, 0, 0, 0, 0]
-
-pawntableblack = reverse(pawntablewhite)
-
-knighttablewhite = [
-    -50, -40, -30, -30, -30, -30, -40, -50,
-    -40, -20, 0, 5, 5, 0, -20, -40,
-    -30, 5, 10, 15, 15, 10, 5, -30,
-    -30, 0, 15, 20, 20, 15, 0, -30,
-    -30, 5, 15, 20, 20, 15, 5, -30,
-    -30, 0, 10, 15, 15, 10, 0, -30,
-    -40, -20, 0, 0, 0, 0, -20, -40,
-    -50, -40, -30, -30, -30, -30, -40, -50]
-
-knighttableblack = reverse(knighttablewhite)
-
-bishopstablewhite = [
-    -20, -10, -10, -10, -10, -10, -10, -20,
-    -10, 5, 0, 0, 0, 0, 5, -10,
-    -10, 10, 10, 10, 10, 10, 10, -10,
-    -10, 0, 10, 10, 10, 10, 0, -10,
-    -10, 5, 5, 10, 10, 5, 5, -10,
-    -10, 0, 5, 10, 10, 5, 0, -10,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -20, -10, -10, -10, -10, -10, -10, -20]
-
-bishopstableblack = reverse(bishopstablewhite)
-
-rookstablewhite = [
-    0, 0, 0, 5, 5, 0, 0, 0,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    -5, 0, 0, 0, 0, 0, 0, -5,
-    5, 10, 10, 10, 10, 10, 10, 5,
-    0, 0, 0, 0, 0, 0, 0, 0]
-
-rookstableblack = reverse(rookstablewhite)
-
-queentablewhite = [
-    -20, -10, -10, -5, -5, -10, -10, -20,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -10, 5, 5, 5, 5, 5, 0, -10,
-    0, 0, 5, 5, 5, 5, 0, -5,
-    -5, 0, 5, 5, 5, 5, 0, -5,
-    -10, 0, 5, 5, 5, 5, 0, -10,
-    -10, 0, 0, 0, 0, 0, 0, -10,
-    -20, -10, -10, -5, -5, -10, -10, -20]
-
-queentableblack = reverse(queentablewhite)
-
-kingtablewhite = [
-    20, 30, 10, 0, 0, 10, 30, 20,
-    20, 20, 0, 0, 0, 0, 20, 20,
-    -10, -20, -20, -20, -20, -20, -20, -10,
-    -20, -30, -30, -40, -40, -30, -30, -20,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30,
-    -30, -40, -40, -50, -50, -40, -40, -30]
-
-kingtableblack = reverse(kingtablewhite)
-
-kingtablewhiteEND = [
-    -50, -30, -30, -30, -30, -30, -30, -50,
-    -30, -30, 0, 0, 0, 0, -30, -30,
-    -30, -10, 20, 30, 30, 20, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 30, 40, 40, 30, -10, -30,
-    -30, -10, 20, 30, 30, 20, -10, -30,
-    -30, -20, -10, 0, 0, -10, -20, -30,
-    -50, -40, -30, -20, -20, -30, -40, -50]
-
-kingtableblackEND = reverse(kingtablewhiteEND)
-
-
-# Build a list with the positions of the given "pieces" on the "board"
-def positions_of_pieces(pieces, board):
-    result = []
-    lst = list(pieces)
-    for piece in lst:
-        for pos in re.finditer(piece, board):
-            result.append(pos.start())
-    result.sort()
-    return result
-
-
 def f_obj(board, play):
-    # If the player white = 0 is playing and he lost his king, then he loses
-    # If the player white = 0 is playing and he eats the black king, then he wins
+    weight_positions = 1e-1
+    w = 'abcdefghijklmnop'
+    wpawn = 'ijklmnop'
+    b = 'ABCDEFGHIJKLMNOP'
+    bpawn = 'IJKLMNOP'
+    score_w_queen = 0
+    score_w_horse = 0
+    score_w_bishop = 0
+    score_w_king = 0
+    score_w_tower = 0
+    countscore_w_pawn = 0
+    score_w_pawn = 0
+    score_w_positions = 0
+    if board.find('a') == -1 and board.find('h') == -1:
+        score_w_tower = -5
+    elif board.find('a') != -1 and board.find('h') != -1:
+        score_w_tower = 5 
+    elif board.find('a') != -1 or board.find('h') != -1:
+        score_w_tower = 2
+    if board.find('b') == -1 and board.find('g') == -1:
+        score_w_horse = -3
+    elif board.find('b') != -1 and board.find('g') != -1:
+        score_w_horse = 3 
+    elif board.find('b') != -1 or board.find('g') != -1:
+        score_w_horse = 1
+    if board.find('c') == -1 and board.find('f') == -1:
+        score_w_bishop = -3
+    elif board.find('c') != -1 and board.find('f') != -1:
+        score_w_bishop = 3 
+    elif board.find('c') != -1 or board.find('f') != -1:
+        score_w_bishop = 1
+    if board.find('d') != -1:
+        score_w_queen = 9
+    elif board.find('d') == -1:
+        score_w_queen = -9
+    if board.find('e') != -1:
+        score_w_king = 9999
+    elif board.find('e') == -1:
+        score_w_king =-9999
 
-    # The opposite for the black = 1 player
+    for i , p in enumerate(wpawn):
+        ex1 = board.find(p)
+        if ex1  >= 0:
+            countscore_w_pawn += 1
 
-    if player == 0:
-        if board.find("e") < 0:
-            return -math.inf
-        if board.find("E") < 0:
-            return math.inf
-    if player == 1:
-        if board.find("E") < 0:
-            return -math.inf
-        if board.find("e") < 0:
-            return math.inf
-
-    # Counts how many of each piece the player has
-    bp = sum(map(board.count, ['I','J', 'K', 'L', 'M', 'N', 'O', 'P']))
-    wp = sum(map(board.count, ['i','j', 'k', 'l', 'm', 'n', 'o', 'p']))
-    bk = sum(map(board.count, ['B','G']))
-    wk = sum(map(board.count, ['b','g']))
-    bb = sum(map(board.count, ['C','F']))
-    wb = sum(map(board.count, ['c','f']))
-    br = sum(map(board.count, ['A','H']))
-    wr = sum(map(board.count, ['a','h']))
-    bq = sum(map(board.count, ['D']))
-    wq = sum(map(board.count, ['d']))
-
-    #   The material score is calculated by the summation of all respective piece’s weights multiplied
-    # by the difference between the number of that respective piece between white and black.
-    material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
-
-    #   The individual pieces score is the sum of piece-square values of positions where the respective
-    # piece is present at that instance of the game.
-
-    pawnsq = sum([pawntablewhite[pos] for pos in positions_of_pieces("ijklmnop", board)])
-    pawnsq = pawnsq + sum([-pawntableblack[pos] for pos in positions_of_pieces("IJKLMNOP", board)])
-
-    knightsq = sum([knighttablewhite[pos] for pos in positions_of_pieces("bg", board)])
-    knightsq = knightsq + sum([-knighttableblack[pos] for pos in positions_of_pieces("BG", board)])
-
-    bishopsq = sum([bishopstablewhite[pos] for pos in positions_of_pieces("cf", board)])
-    bishopsq = bishopsq + sum([-bishopstableblack[pos] for pos in positions_of_pieces("CF", board)])
-
-    rooksq = sum([rookstablewhite[pos] for pos in positions_of_pieces("ah", board)])
-    rooksq = rooksq + sum([-rookstableblack[pos] for pos in positions_of_pieces("AH", board)])
-
-    queensq = sum([queentablewhite[pos] for pos in positions_of_pieces("d", board)])
-    queensq = queensq + sum([-queentableblack[pos] for pos in positions_of_pieces("D", board)])
-
-    if wp + (wk * 3) + (wb * 3) + (wr * 5) + (wq * 9) <= 13 and bp + (bk * 3) + (bb * 3) + (br * 5) + (bq * 9) <= 13:
-        kingsq = sum([kingtablewhiteEND[pos] for pos in positions_of_pieces("e", board)])
-        kingsq = kingsq + sum([-kingtableblackEND[pos] for pos in positions_of_pieces("E", board)])
-    else:
-        kingsq = sum([kingtablewhite[pos] for pos in positions_of_pieces("e", board)])
-        kingsq = kingsq + sum([-kingtableblack[pos] for pos in positions_of_pieces("E", board)])
-
-
-    # Mobility
-
-    count_white_mob = 0
-    count_black_mob = 0
-    for piece in ["a", "b", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p"]:
-        positions_white = positions_of_pieces(piece, board)
-        positions_black = positions_of_pieces(piece.upper(), board)
-        for pos in positions_white:
-            available_pos = get_available_positions(board, pos1_to_pos2(pos), piece)
-            count_white_mob += len(available_pos)
-        for pos in positions_black:
-            available_pos = get_available_positions(board, pos1_to_pos2(pos), piece.upper())
-            count_black_mob += len(available_pos)
-
-    mob = count_white_mob - count_black_mob
-
-    #   It will return the summation of the material scores and the individual scores and mobility for white and when
-    # it comes for black, let’s negate it.
-
-    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq + mob
-
-    if play == 0:
-        return eval
-    else:
-        return -eval
-
-############################################################
+    for i, p in enumerate(w):
+        ex = board.find(p)
+        if ex >= 0:
+            p2 = pos1_to_pos2(ex)
+            score_w_positions += weight_positions * p2[0]
+            
+    score_b_queen = 0
+    score_b_horse = 0
+    score_b_bishop = 0
+    score_b_king = 0
+    score_b_tower = 0
+    countscore_b_pawn = 0
+    score_b_pawn = 0
+    score_b_positions = 0
+    if board.find('A') == -1 and board.find('H') == -1:
+        score_b_tower = -5
+    elif board.find('A') != -1 and board.find('H') != -1:
+        score_b_tower = 5 
+    elif board.find('A') != -1 or board.find('H') != -1:
+        score_b_tower = 2
+    if board.find('B') == -1 and board.find('G') == -1:
+        score_b_horse = -3
+    elif board.find('B') != -1 and board.find('G') != -1:
+        score_b_horse = 3 
+    elif board.find('B') != -1 or board.find('G') != -1:
+        score_b_horse = 1
+    if board.find('C') == -1 and board.find('F') == -1:
+        score_b_bishop = -3
+    elif board.find('C') != -1 and board.find('F') != -1:
+        score_b_bishop = 3 
+    elif board.find('C') != -1 or board.find('F') != -1:
+        score_b_bishop = 1
+    if board.find('D') != -1:
+        score_b_queen = 9
+    elif board.find('D') == -1:
+        score_b_queen = -9
+    if board.find('E') != -1:
+        score_b_king = 9999
+    elif board.find('E') == -1:
+        score_b_king =-9999
+    for i ,p in enumerate(bpawn):
+        ex=board.find(p)
+        if ex  >= 0:
+            countscore_b_pawn += 1
+    for i, p in enumerate(b):
+        ex = board.find(p)
+        if ex >= 0:
+            p2 = pos1_to_pos2(ex)
+            score_b_positions += weight_positions * p2[0]
+            
+    score_w_pawn = countscore_w_pawn*2 - countscore_w_pawn 
+    score_b_pawn = countscore_b_pawn*2 - countscore_b_pawn 
+    
+    return (score_w_pawn + score_w_bishop + score_w_horse + score_w_king + score_w_queen + score_w_tower + score_w_positions - score_b_pawn - score_b_bishop - score_b_horse - score_b_king - score_b_queen - score_b_tower - score_b_positions) * pow(-1, play)
 
 
 def find_node(tr, id):
@@ -228,7 +135,7 @@ def find_node(tr, id):
 def get_positions_directions(state, piece, p2, directions):
     ret = []
     for d in directions:
-        for r in range(1, d[1] + 1):
+        for r in range(1, d[1]+1):
             if d[0] == 'N':
                 if p2[0] - r < 0:
                     break
@@ -348,43 +255,35 @@ def get_positions_directions(state, piece, p2, directions):
                 continue
             if d[0] == 'H':
                 if p2[0] - 2 >= 0 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] - 1])
 
                 if p2[0] - 2 >= 0 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 2, p2[1] + 1])
 
                 if p2[0] - 1 >= 0 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] + 2])
 
                 if p2[0] + 1 <= 7 and p2[1] + 2 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] + 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] + 2])
 
                 if p2[0] + 2 <= 7 and p2[1] + 1 <= 7:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] + 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] + 1])
 
                 if p2[0] + 2 <= 7 and p2[1] - 1 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 2, p2[1] - 1])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 2, p2[1] - 1])
 
                 if p2[0] + 1 <= 7 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] + 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] + 1, p2[1] - 2])
 
                 if p2[0] - 1 >= 0 and p2[1] - 2 >= 0:
-                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(
-                            ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
+                    if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] - 2])
     return ret
 
@@ -394,36 +293,32 @@ def count_nodes(tr):
     if len(tr) > 0:
         for t in tr[-1]:
             ret += count_nodes(t)
-        return (1 + ret)
+        return(1 + ret)
     return ret
 
 
 def get_available_positions(state, p2, piece):
     ret = []
-    if piece in ('a', 'h', 'A', 'H'):  # Tower
+    if piece in ('a', 'h', 'A', 'H'):   #Tower
         aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('c', 'f', 'C', 'F'):  # Bishop
+    if piece in ('c', 'f', 'C', 'F'):   #Bishop
         aux = get_positions_directions(state, piece, p2, [['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('d', 'D'):  # Queen
-        aux = get_positions_directions(state, piece, p2,
-                                       [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7],
-                                        ['SW', 7]])
+    if piece in ('d', 'D'):   #Queen
+        aux = get_positions_directions(state, piece, p2, [['N', 7], ['S', 7], ['W', 7], ['E', 7], ['NE', 7], ['SE', 7], ['NW', 7], ['SW', 7]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
 
-    if piece in ('e', 'E'):  # King
-        aux = get_positions_directions(state, piece, p2,
-                                       [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1],
-                                        ['SW', 1]])
+    if piece in ('e', 'E'):   #King
+        aux = get_positions_directions(state, piece, p2, [['N', 1], ['S', 1], ['W', 1], ['E', 1], ['NE', 1], ['SE', 1], ['NW', 1], ['SW', 1]])
         if len(aux) > 0:
             ret.extend(aux)
         return ret
@@ -466,10 +361,10 @@ def get_available_positions(state, p2, piece):
 
 def sucessor_states(state, player):
     ret = []
+    
+    #print('Player=%d' % player)
 
-    # print('Player=%d' % player)
-
-    for x in range(ord('a') - player * 32, ord('p') - player * 32 + 1):
+    for x in range(ord('a')-player*32, ord('p')-player*32+1):
 
         p = state.find(chr(x))
         if p < 0:
@@ -499,6 +394,7 @@ def insert_state_tree(tr, nv, parent):
         return None
     nd[-1].append(nv)
     return tr
+
 
 
 # #####################################################################################################################
@@ -564,7 +460,6 @@ def _game(position):
 game = lambda squares: "\n".join(_game(squares))
 game.__doc__ = "Return the chessboard as a string for a given position."
 
-
 # #####################################################################################################################
 
 
@@ -589,23 +484,23 @@ def get_description_piece(piece):
 
 
 def description_move(prev, cur, idx, nick):
-    # print('description_move()')
+    #print('description_move()')
     ret = 'Move [%d - %s]: ' % (idx, nick)
 
     cur_blank = [i for i, ltr in enumerate(cur) if ltr == 'z']
     prev_not_blank = [i for i, ltr in enumerate(prev) if ltr != 'z']
-    # print(cur_blank)
-    # print(prev_not_blank)
+    #print(cur_blank)
+    #print(prev_not_blank)
     moved = list(set(cur_blank) & set(prev_not_blank))
-    # print(moved)
+    #print(moved)
     moved = moved[0]
 
     desc_piece = get_description_piece(prev[moved])
 
     fr = pos1_to_pos2(moved)
     to = pos1_to_pos2(cur.find(prev[moved]))
-    # print(fr)
-    # print(to)
+    #print(fr)
+    #print(to)
 
     ret = ret + desc_piece + ' (%d, %d) --> (%d, %d)' % (fr[0], fr[1], to[0], to[1])
     if prev[pos2_to_pos1(to)] != 'z':
@@ -676,8 +571,7 @@ def expand_tree(tr, dep, n, play):
         return tr
     suc = sucessor_states(tr[0], play)
     for s in suc:
-        tr = insert_state_tree(tr, expand_tree([s, random.random(), dep + 1, 0, f_obj(s, play), []], dep + 1, n - 1,
-                                               1 - play), tr)
+        tr = insert_state_tree(tr, expand_tree([s,  random.random(), dep+1, 0, f_obj(s, play), []], dep+1, n-1, 1 - play), tr)
     return tr
 
 
@@ -687,7 +581,8 @@ def show_tree(tr, play, nick, depth):
     print('DEPTH %d' % depth)
     print('%s' % show_board(None, tr[0], f_obj(tr[0], play), nick))
     for t in tr[-1]:
-        show_tree(t, play, nick, depth + 1)
+        show_tree(t, play, nick, depth+1)
+
 
 
 def get_father(tr, st):
@@ -713,6 +608,7 @@ def get_next_move(tree, st):
     return old
 
 
+
 def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
     if d == 0 or len(tr[-1]) == 0:
         return tr, f_obj(tr[0], play)
@@ -735,30 +631,37 @@ def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
             break
 
     return ret_nd, ret
+    
+
+
 
 
 def decide_move(board, play, nick):
-    states = expand_tree([board, random.random(), 0, f_obj(board, play), []], 0, depth_analysis,
-                         play)  # [board, hash, depth, g(), f_obj(), [SUNS]]
-
+    
+    states = expand_tree([board, random.random(), 0, f_obj(board, play), []], 0, depth_analysis, play)    # [board, hash, depth, g(), f_obj(), [SUNS]]
+    
     # show_tree(states, play, nick, 0)
     print('Total nodes in the tree: %d' % count_nodes(states))
-
+            
     choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
-
+        
     # print('Choose f()=%f' % value)
     # print('State_%s_' % choice[0])
-
+    
+    
     next_move = get_next_move(states, choice)
-
+    
     # print('Next_%s_' % next_move[0])
     # input('Trash')
 
     return next_move[0]
 
 
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)  # socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))  # connecting client to server
+
+
+
+client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
+client.connect((sys.argv[1], int(sys.argv[2])))                             #connecting client to server
 
 hello_msg = '%s_%s' % (sys.argv[4], sys.argv[3])
 client.send(hello_msg.encode('ascii'))
@@ -767,7 +670,7 @@ nickname = sys.argv[3]
 
 player = int(sys.argv[4])
 
-while True:  # making valid connection
+while True:                                                 #making valid connection
     while True:
         message = client.recv(1024).decode('ascii')
         if len(message) > 0:
@@ -792,3 +695,4 @@ while True:  # making valid connection
         message = decide_move(message, player, nickname)
 
     client.send(message.encode('ascii'))
+
