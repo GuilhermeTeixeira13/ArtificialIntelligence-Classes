@@ -138,7 +138,6 @@ def f_obj(board, play):
             return math.inf
     if player == 1:
         if board.find("E") < 0:
-            print("preto sob check")
             return -math.inf
         if board.find("e") < 0:
             return math.inf
