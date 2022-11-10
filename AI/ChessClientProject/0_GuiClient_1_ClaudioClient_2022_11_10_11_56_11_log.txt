@@ -1,0 +1,3 @@
+Move [0 - 0_GuiClient]: White Horse (0, 1) --> (2, 2)
+Move [1 - 1_ClaudioClient]: Black Horse (7, 1) --> (5, 0)
+Timeout by 0 - 0_GuiClient: White. Player 1 - 1_ClaudioClient: Black wins. Game finished. 

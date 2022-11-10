@@ -1,16 +1,9 @@
-from gettext import find
-import socket, sys
-import math
-import random
+import socket, threading
+import os, sys
+import time
+from datetime import datetime
 
-
-interactive_flag = False
-
-depth_analysis = 3
-
-def pos2_to_pos1(x2):
-    return x2[0] * 8 + x2[1]
-
+time_out = 1500.0
 
 def pos1_to_pos2(x):
     row = x // 8
@@ -18,118 +11,9 @@ def pos1_to_pos2(x):
     return [row, col]
 
 
-def f_obj(board, play):
-    weight_positions = 1e-1
-    w = 'abcdefghijklmnop'
-    wpawn = 'ijklmnop'
-    b = 'ABCDEFGHIJKLMNOP'
-    bpawn = 'IJKLMNOP'
-    score_w_queen = 0
-    score_w_horse = 0
-    score_w_bishop = 0
-    score_w_king = 0
-    score_w_tower = 0
-    countscore_w_pawn = 0
-    score_w_pawn = 0
-    score_w_positions = 0
-    if board.find('a') == -1 and board.find('h') == -1:
-        score_w_tower = -5
-    elif board.find('a') != -1 and board.find('h') != -1:
-        score_w_tower = 5 
-    elif board.find('a') != -1 or board.find('h') != -1:
-        score_w_tower = 2
-    if board.find('b') == -1 and board.find('g') == -1:
-        score_w_horse = -3
-    elif board.find('b') != -1 and board.find('g') != -1:
-        score_w_horse = 3 
-    elif board.find('b') != -1 or board.find('g') != -1:
-        score_w_horse = 1
-    if board.find('c') == -1 and board.find('f') == -1:
-        score_w_bishop = -3
-    elif board.find('c') != -1 and board.find('f') != -1:
-        score_w_bishop = 3 
-    elif board.find('c') != -1 or board.find('f') != -1:
-        score_w_bishop = 1
-    if board.find('d') != -1:
-        score_w_queen = 9
-    elif board.find('d') == -1:
-        score_w_queen = -9
-    if board.find('e') != -1:
-        score_w_king = 9999
-    elif board.find('e') == -1:
-        score_w_king =-9999
+def pos2_to_pos1(x2):
+    return x2[0] * 8 + x2[1]
 
-    for i , p in enumerate(wpawn):
-        ex1 = board.find(p)
-        if ex1  >= 0:
-            countscore_w_pawn += -3
-
-    for i, p in enumerate(w):
-        ex = board.find(p)
-        if ex >= 0:
-            p2 = pos1_to_pos2(ex)
-            score_w_positions += weight_positions * p2[0]
-            
-    score_b_queen = 0
-    score_b_horse = 0
-    score_b_bishop = 0
-    score_b_king = 0
-    score_b_tower = 0
-    countscore_b_pawn = 0
-    score_b_pawn = 0
-    score_b_positions = 0
-    if board.find('A') == -1 and board.find('H') == -1:
-        score_b_tower = -5
-    elif board.find('A') != -1 and board.find('H') != -1:
-        score_b_tower = 5 
-    elif board.find('A') != -1 or board.find('H') != -1:
-        score_b_tower = 2
-    if board.find('B') == -1 and board.find('G') == -1:
-        score_b_horse = -3
-    elif board.find('B') != -1 and board.find('G') != -1:
-        score_b_horse = 3 
-    elif board.find('B') != -1 or board.find('G') != -1:
-        score_b_horse = 1
-    if board.find('C') == -1 and board.find('F') == -1:
-        score_b_bishop = -3
-    elif board.find('C') != -1 and board.find('F') != -1:
-        score_b_bishop = 3 
-    elif board.find('C') != -1 or board.find('F') != -1:
-        score_b_bishop = 1
-    if board.find('D') != -1:
-        score_b_queen = 9
-    elif board.find('D') == -1:
-        score_b_queen = -9
-    if board.find('E') != -1:
-        score_b_king = 9999
-    elif board.find('E') == -1:
-        score_b_king =-9999
-    for i ,p in enumerate(bpawn):
-        ex=board.find(p)
-        if ex  >= 0:
-            countscore_b_pawn += -3
-    for i, p in enumerate(b):
-        ex = board.find(p)
-        if ex >= 0:
-            p2 = pos1_to_pos2(ex)
-            score_b_positions += weight_positions * p2[0]
-            
-    score_w_pawn = countscore_w_pawn*2 - countscore_w_pawn 
-    score_b_pawn = countscore_b_pawn*2 - countscore_b_pawn 
-    
-    return (score_w_pawn + score_w_bishop + score_w_horse + score_w_king + score_w_queen + score_w_tower + score_w_positions - score_b_pawn - score_b_bishop - score_b_horse - score_b_king - score_b_queen - score_b_tower - score_b_positions) * pow(-1, play)
-
-
-def find_node(tr, id):
-    if len(tr) == 0:
-        return None
-    if tr[0] == id:
-        return tr
-    for t in tr[-1]:
-        aux = find_node(t, id)
-        if aux is not None:
-            return aux
-    return None
 
 
 def get_positions_directions(state, piece, p2, directions):
@@ -222,33 +106,31 @@ def get_positions_directions(state, piece, p2, directions):
                     break
                 if state[pos2_to_pos1([p2[0] + r, p2[1]])] == 'z':
                     ret.append([p2[0] + r, p2[1]])
-                    continue
-                break
+                continue
             if d[0] == 'PN':
                 if p2[0] - r < 0:
                     break
                 if state[pos2_to_pos1([p2[0] - r, p2[1]])] == 'z':
                     ret.append([p2[0] - r, p2[1]])
-                    continue
-                break
+                continue
             if d[0] == 'PS2':
-                if p2[0] + r <= 7 and p2[1] + 1 <= 7:
+                if p2[0] + r <= 7 or p2[1] + 1 <= 7:
                     if state[pos2_to_pos1([p2[0] + r, p2[1] + 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] + r, p2[1] + 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] + r, p2[1] + 1])
 
-                if p2[0] + r <= 7 and p2[1] - 1 >= 0:
+                if p2[0] + r <= 7 or p2[1] - 1 >= 0:
                     if state[pos2_to_pos1([p2[0] + r, p2[1] - 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] + r, p2[1] - 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] + r, p2[1] - 1])
                 continue
             if d[0] == 'PN2':
-                if p2[0] - r >= 0 and p2[1] + 1 <= 7:
+                if p2[0] - r >= 0 or p2[1] + 1 <= 7:
                     if state[pos2_to_pos1([p2[0] - r, p2[1] + 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] - r, p2[1] + 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] - r, p2[1] + 1])
 
-                if p2[0] - r >= 0 and p2[1] - 1 >= 0:
+                if p2[0] - r >= 0 or p2[1] - 1 >= 0:
                     if state[pos2_to_pos1([p2[0] - r, p2[1] - 1])] != 'z':
                         if abs(ord(state[pos2_to_pos1([p2[0] - r, p2[1] - 1])]) - ord(piece)) > 16:
                             ret.append([p2[0] - r, p2[1] - 1])
@@ -285,15 +167,6 @@ def get_positions_directions(state, piece, p2, directions):
                 if p2[0] - 1 >= 0 and p2[1] - 2 >= 0:
                     if state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])] == 'z' or abs(ord(state[pos2_to_pos1([p2[0] - 1, p2[1] - 2])]) - ord(piece)) > 16:
                         ret.append([p2[0] - 1, p2[1] - 2])
-    return ret
-
-
-def count_nodes(tr):
-    ret = 0
-    if len(tr) > 0:
-        for t in tr[-1]:
-            ret += count_nodes(t)
-        return(1 + ret)
     return ret
 
 
@@ -361,8 +234,6 @@ def get_available_positions(state, p2, piece):
 
 def sucessor_states(state, player):
     ret = []
-    
-    #print('Player=%d' % player)
 
     for x in range(ord('a')-player*32, ord('p')-player*32+1):
 
@@ -388,13 +259,23 @@ def sucessor_states(state, player):
     return ret
 
 
-def insert_state_tree(tr, nv, parent):
-    nd = find_node(tr, parent[0])
-    if nd is None:
-        return None
-    nd[-1].append(nv)
-    return tr
+def valid_move(prev, cur, player):
+    suc = sucessor_states(prev, player)
+    for s in suc:
+        if s == cur:
+            return True
 
+    return False
+
+
+def check_winner(cur_state):
+    # If the black king is not on the boar, then the white player wins
+    if cur_state.find('e') < 0:
+        return 1
+    # Vice versa
+    if cur_state.find('E') < 0:
+        return 0
+    return 2
 
 
 # #####################################################################################################################
@@ -460,57 +341,9 @@ def _game(position):
 game = lambda squares: "\n".join(_game(squares))
 game.__doc__ = "Return the chessboard as a string for a given position."
 
-# #####################################################################################################################
 
-
-def get_description_piece(piece):
-    if ord(piece) < 97:
-        ret = 'Black '
-    else:
-        ret = 'White '
-    if piece.lower() in ('a', 'h'):
-        ret = ret + 'Tower'
-    elif piece.lower() in ('b', 'g'):
-        ret = ret + 'Horse'
-    elif piece.lower() in ('c', 'f'):
-        ret = ret + 'Bishop'
-    elif piece.lower() == 'd':
-        ret = ret + 'Queen'
-    elif piece.lower() == 'e':
-        ret = ret + 'King'
-    else:
-        ret = ret + 'Pawn'
-    return ret
-
-
-def description_move(prev, cur, idx, nick):
-    #print('description_move()')
-    ret = 'Move [%d - %s]: ' % (idx, nick)
-
-    cur_blank = [i for i, ltr in enumerate(cur) if ltr == 'z']
-    prev_not_blank = [i for i, ltr in enumerate(prev) if ltr != 'z']
-    #print(cur_blank)
-    #print(prev_not_blank)
-    moved = list(set(cur_blank) & set(prev_not_blank))
-    #print(moved)
-    moved = moved[0]
-
-    desc_piece = get_description_piece(prev[moved])
-
-    fr = pos1_to_pos2(moved)
-    to = pos1_to_pos2(cur.find(prev[moved]))
-    #print(fr)
-    #print(to)
-
-    ret = ret + desc_piece + ' (%d, %d) --> (%d, %d)' % (fr[0], fr[1], to[0], to[1])
-    if prev[pos2_to_pos1(to)] != 'z':
-        desc_piece = get_description_piece(prev[pos2_to_pos1(to)])
-        ret = ret + ' eaten ' + desc_piece
-    return ret
-
-
-def show_board(prev, cur, idx, nick):
-    print('print_board(obj: %f)...' % idx)
+def print_board(prev, cur, idx, nick):
+    # print('print_board()_%s_...' % cur)
     state_show = []
     for r in range(0, 8):
         row = []
@@ -561,138 +394,139 @@ def show_board(prev, cur, idx, nick):
 
     if prev is None:
         return ret
+    # print('before description...')
     ret = ret + description_move(prev, cur, idx, nick)
+    # print('after description...')
 
     return ret
 
-
-def expand_tree(tr, dep, n, play):
-    if n == 0:
-        return tr
-    suc = sucessor_states(tr[0], play)
-    for s in suc:
-        tr = insert_state_tree(tr, expand_tree([s,  random.random(), dep+1, 0, f_obj(s, play), []], dep+1, n-1, 1 - play), tr)
-    return tr
-
-
-def show_tree(tr, play, nick, depth):
-    if len(tr) == 0:
-        return
-    print('DEPTH %d' % depth)
-    print('%s' % show_board(None, tr[0], f_obj(tr[0], play), nick))
-    for t in tr[-1]:
-        show_tree(t, play, nick, depth+1)
-
-
-
-def get_father(tr, st):
-    if len(tr) == 0:
-        return None
-    for sun in tr[-1]:
-        if sun[1] == st[1]:
-            return tr
-
-    for sun in tr[-1]:
-        aux = get_father(sun, st)
-        if aux is not None:
-            return aux
-
-    return None
-
-
-def get_next_move(tree, st):
-    old = None
-    while get_father(tree, st) is not None:
-        old = st
-        st = get_father(tree, st)
-    return old
-
-
-
-def minimax_alpha_beta(tr, d, play, max_player, alpha, beta):
-    if d == 0 or len(tr[-1]) == 0:
-        return tr, f_obj(tr[0], play)
-
-    ret = math.inf * pow(-1, max_player)
-    ret_nd = tr
-    for s in tr[-1]:
-        aux, val = minimax_alpha_beta(s, d - 1, play, not max_player, alpha, beta)
-        if max_player:
-            if val > ret:
-                ret = val
-                ret_nd = aux
-            alpha = max(alpha, ret)
-        else:
-            if val < ret:
-                ret = val
-                ret_nd = aux
-            beta = min(beta, ret)
-        if beta <= alpha:
-            break
-
-    return ret_nd, ret
-    
-
-
-
-
-def decide_move(board, play, nick):
-    
-    states = expand_tree([board, random.random(), 0, f_obj(board, play), []], 0, depth_analysis, play)    # [board, hash, depth, g(), f_obj(), [SUNS]]
-    
-    # show_tree(states, play, nick, 0)
-    print('Total nodes in the tree: %d' % count_nodes(states))
-            
-    choice, value = minimax_alpha_beta(states, depth_analysis, play, True, -math.inf, math.inf)
-        
-    # print('Choose f()=%f' % value)
-    # print('State_%s_' % choice[0])
-    
-    
-    next_move = get_next_move(states, choice)
-    
-    # print('Next_%s_' % next_move[0])
-    # input('Trash')
-
-    return next_move[0]
-
-
-
-
-
-client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)      #socket initialization
-client.connect((sys.argv[1], int(sys.argv[2])))                             #connecting client to server
-
-hello_msg = '%s_%s' % (sys.argv[4], sys.argv[3])
-client.send(hello_msg.encode('ascii'))
-
-nickname = sys.argv[3]
-
-player = int(sys.argv[4])
-
-while True:                                                 #making valid connection
-    while True:
-        message = client.recv(1024).decode('ascii')
-        if len(message) > 0:
-            break
-
-    if interactive_flag:
-        row_from = int(input('Row from > '))
-        col_from = int(input('Col from > '))
-        row_to = int(input('Row to > '))
-        col_to = int(input('Col to > '))
-
-        p_from = pos2_to_pos1([row_from, col_from])
-        p_to = pos2_to_pos1([row_to, col_to])
-
-        if (0 <= p_from <= 63) and (0 <= p_to <= 63):
-            message = list(message)
-            aux = message[p_from]
-            message[p_from] = 'z'
-            message[p_to] = aux
-            message = ''.join(message)
+def get_description_piece(piece):
+    if ord(piece) < 97:
+        ret = 'Black '
     else:
-        message = decide_move(message, player, nickname)
+        ret = 'White '
+    if piece.lower() in ('a', 'h'):
+        ret = ret + 'Tower'
+    elif piece.lower() in ('b', 'g'):
+        ret = ret + 'Horse'
+    elif piece.lower() in ('c', 'f'):
+        ret = ret + 'Bishop'
+    elif piece.lower() == 'd':
+        ret = ret + 'Queen'
+    elif piece.lower() == 'e':
+        ret = ret + 'King'
+    else:
+        ret = ret + 'Pawn'
+    return ret
 
-    client.send(message.encode('ascii'))
+def description_move(prev, cur, idx, nick):
+    #print('description_move()')
+    ret = 'Move [%d - %s]: ' % (idx, nick)
 
+    cur_blank = [i for i, ltr in enumerate(cur) if ltr == 'z']
+    prev_not_blank = [i for i, ltr in enumerate(prev) if ltr != 'z']
+    #print(cur_blank)
+    #print(prev_not_blank)
+    moved = list(set(cur_blank) & set(prev_not_blank))
+    #print(moved)
+    moved = moved[0]
+
+    desc_piece = get_description_piece(prev[moved])
+
+    fr = pos1_to_pos2(moved)
+    to = pos1_to_pos2(cur.find(prev[moved]))
+    #print(fr)
+    #print(to)
+
+    ret = ret + desc_piece + ' (%d, %d) --> (%d, %d)' % (fr[0], fr[1], to[0], to[1])
+    if prev[pos2_to_pos1(to)] != 'z':
+        desc_piece = get_description_piece(prev[pos2_to_pos1(to)])
+        ret = ret + ' eaten ' + desc_piece
+    return ret
+
+# #####################################################################################################################
+
+
+host = sys.argv[1]                                                    #LocalHost
+port = int(sys.argv[2])                                                             #Choosing unreserved port
+colors = ['White', 'Black']
+
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)              #socket initialization
+server.bind((host, port))                                               #binding host and port to socket
+server.listen()
+
+client_0, address_0 = server.accept()
+nick_0 = client_0.recv(1024).decode('ascii')
+
+client_1, address_1 = server.accept()
+nick_1 = client_1.recv(1024).decode('ascii')
+
+nicks = [nick_0, nick_1]
+clients = [client_0, client_1]
+
+print(clients)
+print(nicks)
+
+cur_state = 'abcdefghijklmnopzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzIJKMNLOPABCDEFGH'
+
+date_time_file = os.path.join('%s' % nick_0 + '_' + '%s' % nick_1 + '_' + datetime.now().strftime("%Y_%m_%d_%H_%M_%S") + '_log.txt')
+
+file_out = open(date_time_file, "a+")
+
+print('%s' % print_board(None, cur_state, 0, None))
+
+idx_move = 0
+while True:
+
+    try:
+        #print('>>[%d] move %d - %s should play. Sending state_%s_' % (idx_move, idx_move % 2, nicks[idx_move % 2], cur_state))
+
+        # If the idx_move is even, then the client[0] -> White is playing
+        clients[idx_move % 2].send(cur_state.encode('ascii'))
+        prev_state = '%s' % cur_state # The previous state is now the current on
+        while True:
+            clients[idx_move % 2].settimeout(time_out)
+            # The current state is changed after the client make a play
+            cur_state = clients[idx_move % 2].recv(1024).decode('ascii')
+            if len(cur_state) > 0:
+                break
+        #print('Received state_%s_' % cur_state)
+
+        # Cheks if the move is valid, if not the game ends
+        valid_mv = valid_move(prev_state, cur_state, idx_move % 2)
+
+        #print('Valid %d' % valid_mv)
+        if not valid_mv:
+            file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
+            print('%s' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
+            print('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
+            file_out.write('Invalid move by %d - %s. Player %d - %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)]))
+            break
+        #print('printing board...')
+        print('%s' % print_board(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
+
+        file_out.write('%s\n' % description_move(prev_state, cur_state, idx_move, nicks[idx_move % 2]))
+
+        #print('Evaluating finish')
+
+        # Finish is 2 if there is no winner yet, 0 if Player 0 wins and 1 if Player 1 wins
+        finish = check_winner(cur_state)
+        #print('Evaluated finish %d' % finish)
+
+        if finish < 2:
+
+            print('Player %d - %s: %s wins. Game finished. ' % (finish, nicks[finish], colors[finish]))
+            file_out.write('Player %d - %s: %s wins. Game finished. ' % (finish, nicks[finish], colors[finish]))
+            break
+
+        idx_move += 1
+        time.sleep(0.1)
+        #print('Done...')
+    except:
+        print('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)], colors[1 - (idx_move % 2)]))
+        file_out.write('Timeout by %d - %s: %s. Player %d - %s: %s wins. Game finished. ' % (idx_move % 2, nicks[idx_move % 2], colors[idx_move % 2], 1 - (idx_move % 2), nicks[1 - (idx_move % 2)], colors[1 - (idx_move % 2)]))
+        break
+
+
+
+file_out.close()

@@ -1,0 +1,17 @@
+Move [0 - MeuClient]: White Pawn (1, 2) --> (2, 2)
+Move [1 - 1_ProfClient]: Black Pawn (6, 5) --> (4, 5)
+Move [2 - MeuClient]: White Pawn (1, 5) --> (2, 5)
+Move [3 - 1_ProfClient]: Black Pawn (6, 3) --> (4, 3)
+Move [4 - MeuClient]: White Pawn (1, 1) --> (2, 1)
+Move [5 - 1_ProfClient]: Black Horse (7, 1) --> (5, 0)
+Move [6 - MeuClient]: White Pawn (1, 6) --> (2, 6)
+Move [7 - 1_ProfClient]: Black Bishop (7, 2) --> (5, 4)
+Move [8 - MeuClient]: White Pawn (1, 0) --> (3, 0)
+Move [9 - 1_ProfClient]: Black Queen (7, 3) --> (5, 3)
+Move [10 - MeuClient]: White Tower (0, 0) --> (1, 0)
+Move [11 - 1_ProfClient]: Black Horse (7, 6) --> (5, 5)
+Move [12 - MeuClient]: White Pawn (1, 7) --> (3, 7)
+Move [13 - 1_ProfClient]: Black Queen (5, 3) --> (2, 6) eaten White Pawn
+Move [14 - MeuClient]: White Pawn (3, 7) --> (5, 0) eaten Black Horse
+Move [15 - 1_ProfClient]: Black Queen (2, 6) --> (0, 4) eaten White King
+Player 1 - 1_ProfClient: Black wins. Game finished. 

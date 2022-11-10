@@ -1,0 +1,17 @@
+Move [0 - Random]: White Pawn (1, 7) --> (2, 7)
+Move [1 - Client]: Black Horse (7, 1) --> (5, 2)
+Move [2 - Random]: White Pawn (1, 2) --> (2, 2)
+Move [3 - Client]: Black Pawn (6, 4) --> (5, 4)
+Move [4 - Random]: White Pawn (1, 0) --> (2, 0)
+Move [5 - Client]: Black Bishop (7, 5) --> (5, 3)
+Move [6 - Random]: White Pawn (1, 4) --> (3, 4)
+Move [7 - Client]: Black Bishop (5, 3) --> (2, 0) eaten White Pawn
+Move [8 - Random]: White Bishop (0, 5) --> (2, 3)
+Move [9 - Client]: Black Pawn (6, 3) --> (4, 3)
+Move [10 - Random]: White Queen (0, 3) --> (1, 2)
+Move [11 - Client]: Black Horse (5, 2) --> (4, 4)
+Move [12 - Random]: White Pawn (1, 6) --> (2, 6)
+Move [13 - Client]: Black Horse (4, 4) --> (2, 3) eaten White Bishop
+Move [14 - Random]: White Queen (1, 2) --> (2, 1)
+Move [15 - Client]: Black Horse (2, 3) --> (0, 4) eaten White King
+Player 1 - Client: Black wins. Game finished. 

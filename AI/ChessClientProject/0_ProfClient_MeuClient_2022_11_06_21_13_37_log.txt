@@ -1,0 +1,50 @@
+Move [0 - 0_ProfClient]: White Horse (0, 1) --> (2, 2)
+Move [1 - MeuClient]: Black Horse (7, 1) --> (5, 2)
+Move [2 - 0_ProfClient]: White Horse (2, 2) --> (4, 3)
+Move [3 - MeuClient]: Black Horse (7, 6) --> (5, 5)
+Move [4 - 0_ProfClient]: White Horse (4, 3) --> (3, 5)
+Move [5 - MeuClient]: Black Pawn (6, 3) --> (4, 3)
+Move [6 - 0_ProfClient]: White Horse (0, 6) --> (2, 5)
+Move [7 - MeuClient]: Black Pawn (6, 4) --> (4, 4)
+Move [8 - 0_ProfClient]: White Horse (3, 5) --> (2, 3)
+Move [9 - MeuClient]: Black Bishop (7, 2) --> (5, 4)
+Move [10 - 0_ProfClient]: White Horse (2, 5) --> (4, 6)
+Move [11 - MeuClient]: Black Bishop (7, 5) --> (5, 3)
+Move [12 - 0_ProfClient]: White Pawn (1, 0) --> (3, 0)
+Move [13 - MeuClient]: Black Horse (5, 2) --> (3, 3)
+Move [14 - 0_ProfClient]: White Pawn (1, 7) --> (3, 7)
+Move [15 - MeuClient]: Black Horse (3, 3) --> (1, 2) eaten White Pawn
+Move [16 - 0_ProfClient]: White Queen (0, 3) --> (1, 2) eaten Black Horse
+Move [17 - MeuClient]: Black King (7, 4) --> (7, 5)
+Move [18 - 0_ProfClient]: White Queen (1, 2) --> (2, 2)
+Move [19 - MeuClient]: Black King (7, 5) --> (7, 6)
+Move [20 - 0_ProfClient]: White Queen (2, 2) --> (4, 0)
+Move [21 - MeuClient]: Black Horse (5, 5) --> (3, 4)
+Move [22 - 0_ProfClient]: White Horse (4, 6) --> (3, 4) eaten Black Horse
+Move [23 - MeuClient]: Black Pawn (4, 3) --> (3, 4) eaten White Horse
+Move [24 - 0_ProfClient]: White Horse (2, 3) --> (4, 4) eaten Black Pawn
+Move [25 - MeuClient]: Black Bishop (5, 3) --> (4, 4) eaten White Horse
+Move [26 - 0_ProfClient]: White Queen (4, 0) --> (4, 4) eaten Black Bishop
+Move [27 - MeuClient]: Black Queen (7, 3) --> (3, 7) eaten White Pawn
+Move [28 - 0_ProfClient]: White Tower (0, 7) --> (3, 7) eaten Black Queen
+Move [29 - MeuClient]: Black Tower (7, 0) --> (7, 3)
+Move [30 - 0_ProfClient]: White Queen (4, 4) --> (6, 2) eaten Black Pawn
+Move [31 - MeuClient]: Black Tower (7, 3) --> (1, 3) eaten White Pawn
+Move [32 - 0_ProfClient]: White Bishop (0, 2) --> (1, 3) eaten Black Tower
+Move [33 - MeuClient]: Black Pawn (3, 4) --> (2, 4)
+Move [34 - 0_ProfClient]: White Bishop (1, 3) --> (2, 4) eaten Black Pawn
+Move [35 - MeuClient]: Black Bishop (5, 4) --> (4, 5)
+Move [36 - 0_ProfClient]: White Bishop (2, 4) --> (6, 0) eaten Black Pawn
+Move [37 - MeuClient]: Black Pawn (6, 7) --> (6, 0) eaten White Bishop
+Move [38 - 0_ProfClient]: White Tower (3, 7) --> (7, 7) eaten Black Tower
+Move [39 - MeuClient]: Black King (7, 6) --> (7, 7) eaten White Tower
+Move [40 - 0_ProfClient]: White Queen (6, 2) --> (6, 1) eaten Black Pawn
+Move [41 - MeuClient]: Black King (7, 7) --> (7, 6)
+Move [42 - 0_ProfClient]: White Queen (6, 1) --> (6, 0) eaten Black Pawn
+Move [43 - MeuClient]: Black Bishop (4, 5) --> (5, 6)
+Move [44 - 0_ProfClient]: White Tower (0, 0) --> (2, 0)
+Move [45 - MeuClient]: Black Bishop (5, 6) --> (4, 5)
+Move [46 - 0_ProfClient]: White Queen (6, 0) --> (7, 0)
+Move [47 - MeuClient]: Black Bishop (4, 5) --> (5, 6)
+Move [48 - 0_ProfClient]: White Queen (7, 0) --> (7, 6) eaten Black King
+Player 0 - 0_ProfClient: White wins. Game finished. 

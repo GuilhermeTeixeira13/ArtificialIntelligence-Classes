@@ -1,0 +1,11 @@
+Move [0 - MAQUINA]: White Pawn (1, 7) --> (3, 7)
+Move [1 - ROBO]: Black Pawn (6, 3) --> (4, 3)
+Move [2 - MAQUINA]: White Horse (0, 1) --> (2, 0)
+Move [3 - ROBO]: Black Bishop (7, 2) --> (5, 4)
+Move [4 - MAQUINA]: White Pawn (1, 4) --> (2, 4)
+Move [5 - ROBO]: Black Horse (7, 1) --> (5, 2)
+Move [6 - MAQUINA]: White Bishop (0, 5) --> (2, 3)
+Move [7 - ROBO]: Black Horse (7, 6) --> (5, 5)
+Move [8 - MAQUINA]: White Bishop (2, 3) --> (1, 4)
+Move [9 - ROBO]: Black Pawn (6, 4) --> (4, 4)
+10 consecutives without eaten pieces. MAQUINA - ROBO Draw. Game finished. 

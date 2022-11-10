@@ -1,0 +1,10 @@
+Move [0 - MeuClient]: White Horse (0, 1) --> (2, 2)
+Move [1 - RandomClient]: Black Horse (7, 6) --> (5, 5)
+Move [2 - MeuClient]: White Horse (0, 6) --> (2, 5)
+Move [3 - RandomClient]: Black Pawn (6, 1) --> (4, 1)
+Move [4 - MeuClient]: White Horse (2, 2) --> (4, 1) eaten Black Pawn
+Move [5 - RandomClient]: Black Horse (5, 5) --> (4, 3)
+Move [6 - MeuClient]: White Horse (4, 1) --> (6, 2) eaten Black Pawn
+Move [7 - RandomClient]: Black Tower (7, 7) --> (7, 6)
+Move [8 - MeuClient]: White Horse (6, 2) --> (7, 4) eaten Black King
+Player 0 - MeuClient: White wins. Game finished. 

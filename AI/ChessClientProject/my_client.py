@@ -5,7 +5,7 @@ import re
 
 interactive_flag = False
 
-depth_analysis = 2
+depth_analysis = 3
 
 
 def pos2_to_pos1(x2):
@@ -156,7 +156,7 @@ def f_obj(board, play):
 
     #   The material score is calculated by the summation of all respective piece’s weights multiplied
     # by the difference between the number of that respective piece between white and black.
-    material = 100 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
+    material = 10 * (wp - bp) + 320 * (wk - bk) + 330 * (wb - bb) + 500 * (wr - br) + 900 * (wq - bq)
 
     #   The individual pieces score is the sum of piece-square values of positions where the respective
     # piece is present at that instance of the game.
