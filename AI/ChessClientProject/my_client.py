@@ -194,17 +194,17 @@ def f_obj(board, play):
         for pos in positions_white:
             available_pos = get_available_positions(board, pos1_to_pos2(pos), piece)
             if piece == "b" or piece == "d" or piece == "f" or piece == "g":
-                count_white_mob += len(available_pos) + 20
+                count_white_mob += len(available_pos) + 3
             elif piece == "a" or piece == "h":
-                count_white_mob += len(available_pos) + 10
+                count_white_mob += len(available_pos) + 1
             else:
                 count_white_mob += len(available_pos)
         for pos in positions_black:
             available_pos = get_available_positions(board, pos1_to_pos2(pos), piece.upper())
             if piece == "B" or piece == "D" or piece == "F" or piece == "G":
-                count_black_mob += len(available_pos) + 20
+                count_black_mob += len(available_pos) + 3
             elif piece == "A" or piece == "H":
-                count_black_mob += len(available_pos) + 10
+                count_black_mob += len(available_pos) + 1
             else:
                 count_black_mob += len(available_pos)
 
@@ -213,7 +213,7 @@ def f_obj(board, play):
     #   It will return the summation of the material scores and the individual scores and mobility for white and when
     # it comes for black, let’s negate it.
 
-    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq + (mob*0.1)
+    eval = material + pawnsq + knightsq + bishopsq + rooksq + queensq + kingsq + mob
 
     if play == 0:
         return eval

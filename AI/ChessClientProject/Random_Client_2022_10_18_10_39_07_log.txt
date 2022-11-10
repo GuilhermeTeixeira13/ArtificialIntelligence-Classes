@@ -1,2 +1,0 @@
-Move [0 - Random]: White Pawn (1, 6) --> (2, 6)
-Timeout by 1 - Client: Black. Player 0 - Random: White wins. Game finished. 

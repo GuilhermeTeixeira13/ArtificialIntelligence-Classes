@@ -1,1 +1,0 @@
-Timeout by 0 - 0_GuiClient: White. Player 1 - 1_ClaudioClient: Black wins. Game finished. 
