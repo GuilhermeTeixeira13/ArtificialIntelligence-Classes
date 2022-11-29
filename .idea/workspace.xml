@@ -2,9 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="bdd09ebb-c742-4ec4-8ed2-316757fd43e1" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/AI/TP2/time_series_data_human_activities.csv" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/ArtificialIntelligence-UBI.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/ArtificialIntelligence-UBI.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -30,14 +27,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;C:/Users/gui/Desktop/Programação/TC-UBI/TP1-Python/tp1V2.py&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "//wsl$/Ubuntu-20.04/home/gui/UBI/TC-UBI/TP1-Python/tp1.py",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
@@ -48,7 +45,7 @@
       <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\Week1" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.InterpreterPython">
+  <component name="RunManager" selected="Python.tp1 (2)">
     <configuration name="InterpreterPython" type="PythonConfigurationType" factoryName="Python">
       <module name="ArtificialIntelligence-UBI" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -91,27 +88,6 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="queens" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
-      <module name="ArtificialIntelligence-UBI" />
-      <option name="INTERPRETER_OPTIONS" value="" />
-      <option name="PARENT_ENVS" value="true" />
-      <envs>
-        <env name="PYTHONUNBUFFERED" value="1" />
-      </envs>
-      <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/AI/Week2" />
-      <option name="IS_MODULE_SDK" value="true" />
-      <option name="ADD_CONTENT_ROOTS" value="true" />
-      <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/AI/Week2/queens.py" />
-      <option name="PARAMETERS" value="" />
-      <option name="SHOW_COMMAND_LINE" value="false" />
-      <option name="EMULATE_TERMINAL" value="false" />
-      <option name="MODULE_MODE" value="false" />
-      <option name="REDIRECT_INPUT" value="false" />
-      <option name="INPUT_FILE" value="" />
-      <method v="2" />
-    </configuration>
     <configuration name="tp1 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="ArtificialIntelligence-UBI" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -125,6 +101,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/../../Programação/TC-UBI/TP1-Python/tp1.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="tp1 (2)" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="ArtificialIntelligence-UBI" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="//wsl$/Ubuntu-20.04/home/gui/UBI/TC-UBI/TP1-Python" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="//wsl$/Ubuntu-20.04/home/gui/UBI/TC-UBI/TP1-Python/tp1.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -177,19 +174,19 @@
     </configuration>
     <list>
       <item itemvalue="Python.InterpreterPython" />
+      <item itemvalue="Python.tp1 (2)" />
       <item itemvalue="Python.tp1 (1)" />
       <item itemvalue="Python.tp1V2" />
       <item itemvalue="Python.client2" />
-      <item itemvalue="Python.queens" />
       <item itemvalue="Python.tp1" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.tp1 (2)" />
         <item itemvalue="Python.tp1V2" />
         <item itemvalue="Python.tp1 (1)" />
         <item itemvalue="Python.client2" />
         <item itemvalue="Python.tp1" />
-        <item itemvalue="Python.queens" />
       </list>
     </recent_temporary>
   </component>
