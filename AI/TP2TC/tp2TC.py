@@ -1,95 +1,91 @@
-def read_rules(numRules):
-    mtx = []
-    for i in range(numRules):
+def read_rules(num_rules):
+    rules_mtx = []
+    for i in range(num_rules):
         line = list(str(input()).split(" "))
         line.remove("->")
-        mtx.append([line[0], line[1::]])
-    return mtx
+        rules_mtx.append([line[0], ''.join(line[1::])])
+    return rules_mtx
 
 
-def create_matrix(size):
-    return [[[] for _ in range(size)] for _ in range(size)]
+def create_triangular_mtx(size):
+    return [[[] for _ in range(i+1)] for i in range(size)]
 
 
-def fill_cell(mtx, mtx_size, l, c, state_son, rules):
-    for r in rules:
-        #print("state_son -> "+str(state_son))
+def fill_cell(mtx, mtx_size, l, c, production_result, rules):
+    for rule in rules:
+        if production_result in rule[1] and rule[0] not in mtx[invert_lines(mtx_size, l)][c]:
+            mtx[invert_lines(mtx_size, l)][c].append(rule[0])
 
-        #state_son_list = list(state_son)
-        r1S = ''.join(r[1])
 
-        print("state_son -> "+str(state_son))
-        print("r[0] -> " + str(r[0]))
-        print("r1S -> " + str(r1S))
-        print(state_son in r1S)
-        print(r[0] not in mtx[mtx_size-l-1][c])
+def invert_lines(size, line):
+    return size - line - 1
 
-        if state_son in r1S and r[0] not in mtx[mtx_size-l-1][c]:
-            mtx[mtx_size - l - 1][c].append(r[0])
 
-def extract_k_length_substrings(str, K):
-    return [str[i: j] for i in range(len(str)) for j in range(i + 1, len(str) + 1) if len(str[i:j]) == K]
+def extract_k_length_substrings(s, k):
+    return [s[i: j] for i in range(len(s)) for j in range(i + 1, len(s) + 1) if len(s[i:j]) == k]
 
 
 def cartesian_product(l1, l2):
     return [i+str(j) for i in l1 for j in l2]
 
 
-def split_string(str):
-    size = len(str)
-    res = []
-    for i in range(1, size):
-        res.append([str[:i], str[i:]])
+def extract_substring_combos(s):
+    return [[s[:i], s[i:]] for i in range(1, len(s))]
 
-    return res
 
 def search_for_str_generators(mtx, mtx_size, s, w):
-    print("["+str((mtx_size-(len(s)-1))-1)+"]"+"["+str((extract_k_length_substrings(w, len(s)).index(s)))+"]")
     return mtx[mtx_size-(len(s)-1)-1][extract_k_length_substrings(w, len(s)).index(s)]
 
 
-def solve(w, rules):
-    mtx = create_matrix(len(w))
-    n = len(w)
+def print_output(mtx, word):
+    print("YES") if "S" in mtx[0][0] else print("NO")
 
-    print("regras-> "+str(rules))
+    with open('results.txt', 'w') as f:
+        for l in range(len(word)):
+            for cell in mtx[l]:
+                if cell:
+                    cell_sorted = sorted(cell)
+                    for w in cell_sorted:
+                        if w == cell_sorted[-1]:
+                            print(w+"\t\t", end="")
+                            f.write(w+"\t\t")
+                        else:
+                            print(w, end=" ")
+                            f.write(w + " ")
+                else:
+                    print("\t\t", end="")
+                    f.write("\t\t")
+            print()
+            f.write("\n")
+        print("\t\t".join(list(word)))
+        print()
+        for char in word:
+            f.write(char+"\t\t")
+
+
+def solve(w, rules):
+    mtx = create_triangular_mtx(len(w))
+    n = len(w)
 
     for c in range(0, n):
         fill_cell(mtx, n, 0, c, w[c], rules)
 
     for l in range(n-2, -1, -1):
-        print("l = "+str(l))
-        sub_words = extract_k_length_substrings(w, n-l)
-        print("sub_words = "+str(sub_words))
-        for pos, word in enumerate(sub_words):
-            sub_sub_word = split_string(word)
+        interspersed_substrings = extract_k_length_substrings(w, invert_lines(n, l-1))
+        for pos, word in enumerate(interspersed_substrings):
+            substring_combos = extract_substring_combos(word)
+            for combo in substring_combos:
+                x = search_for_str_generators(mtx, n, combo[0], w)
+                y = search_for_str_generators(mtx, n, combo[1], w)
+                cart_prod_xy = cartesian_product(x, y)
+                for element in cart_prod_xy:
+                    fill_cell(mtx, n, invert_lines(n, l), pos, element, rules)
 
-            for sub_sub_sub_word in sub_sub_word:
-                print("sub_sub_sub_word = " + str(sub_sub_sub_word))
-                l1 = search_for_str_generators(mtx, n, sub_sub_sub_word[0], w)
-                l2 = search_for_str_generators(mtx, n, sub_sub_sub_word[1], w)
-
-                cart = cartesian_product(l1, l2)
-
-                print("l1 = " + str(l1))
-                print("l2 = " + str(l2))
-                print("cart = " + str(cart))
-
-                for element in cart:
-                    print("inserir em ["+str(n - l - 1)+"]["+str(pos)+"]")
-                    fill_cell(mtx, n, n - l - 1, pos, element, rules)
-                    print(mtx)
-        print("------------------")
-    print(mtx)
+    print_output(mtx, w)
 
 
-print(split_string("ab"))
-w = str(input())
+word_to_recognize = str(input())
 m = int(input())
-rules = read_rules(m)
-solve(w, rules)
+r = read_rules(m)
+solve(word_to_recognize, r)
 
-#print(rules)
-#print(extract_k_length_substrings(w, 2))
-#print(cartesian_product(["A","B"], ["C"]))
-#print(split_every_k_char(w, 2))
