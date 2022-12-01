@@ -1,8 +1,6 @@
-S		
-		F		
-				A		
-S						S		
-		F						F		
-		A		A				A		A		
-S		C		C		S		C		C		S		
-a		b		b		a		b		b		a		
+A S		
+A S		A S		
+A S		S		A S		
+A S		A		S		A S		
+A		S		A		A		S		
+a		b		a		a		b		
