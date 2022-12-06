@@ -40,5 +40,8 @@ def create_instances(data, t):
 
                 begin_in_line += 1
                 line_limit += 1
+def create_k_fold_states(k):
 
-create_instances("time_series_data_human_activities.csv", 53680)
+
+
+create_instances("time_series_data_human_activities.csv", 1)
