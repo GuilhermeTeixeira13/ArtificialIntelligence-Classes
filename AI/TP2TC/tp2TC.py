@@ -39,28 +39,16 @@ def search_for_str_generators(mtx, mtx_size, s, w):
 
 def print_output(mtx, word):
     print("YES") if "S" in mtx[0][0] else print("NO")
-
-    with open('results.txt', 'w') as f:
-        for l in range(len(word)):
-            for cell in mtx[l]:
-                if cell:
-                    cell_sorted = sorted(cell)
-                    for w in cell_sorted:
-                        if w == cell_sorted[-1]:
-                            print(w+"\t\t", end="")
-                            f.write(w+"\t\t")
-                        else:
-                            print(w, end=" ")
-                            f.write(w + " ")
-                else:
-                    print("\t\t", end="")
-                    f.write("\t\t")
-            print()
-            f.write("\n")
-        print("\t\t".join(list(word)))
+    for l in range(len(word)):
+        for cell in mtx[l]:
+            if cell:
+                for w in sorted(cell):
+                    print(w+"\t\t", end="") if w == sorted(cell)[-1] else print(w, end=" ")
+            else:
+                print("\t\t", end="")
         print()
-        for char in word:
-            f.write(char+"\t\t")
+    print("\t\t".join(list(word)))
+    print()
 
 
 def solve(w, rules):
