@@ -29,7 +29,7 @@
   &quot;keyToString&quot;: {
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;//wsl$/Ubuntu-20.04/home/gui/UBI/TC-UBI/TP1-Python/tp1.py&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/gui/Desktop/Escola/ArtificialIntelligence-UBI&quot;,
     &quot;settings.editor.selected.configurable&quot;: &quot;com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable&quot;
   }
 }</component>
@@ -38,13 +38,14 @@
       <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\AI\TP2\nova" />
+      <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\AI\TP2" />
       <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\AI\TP2TC" />
       <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\TP2" />
       <recent name="C:\Users\guite\OneDrive\Área de Trabalho\ArtificialIntelligence-UBI\AI\ChessClientProject" />
-      <recent name="C:\Users\gui\Desktop\Escola\ArtificialIntelligence-UBI\Week1" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.tp2TC">
+  <component name="RunManager" selected="Python.InterpreterPython">
     <configuration name="InterpreterPython" type="PythonConfigurationType" factoryName="Python">
       <module name="ArtificialIntelligence-UBI" />
       <option name="INTERPRETER_OPTIONS" value="" />
